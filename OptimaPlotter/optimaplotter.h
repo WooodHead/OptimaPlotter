@@ -5,6 +5,7 @@
 #include "ui_optimaplotter.h"
 
 class PlotWidget;
+class QSpinBox;
 
 class OptimaPlotter : public QMainWindow
 {
@@ -16,6 +17,7 @@ public:
 
 private:
 	void initPlotWidget();
+	void setupToolbar();
 
 public slots:
 	void onReset();
@@ -30,6 +32,7 @@ private slots:
 private:
 	Ui::OptimaPlotterClass ui;
 	PlotWidget* m_plotWidget;
+	QSpinBox* m_polynomialDegreeSpinBox;
 };
 
 #endif //OPTIMAPLOTTER_H

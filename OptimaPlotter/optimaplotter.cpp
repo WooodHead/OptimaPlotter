@@ -5,6 +5,8 @@
 #include <qdebug.h>
 #include <qpen.h>
 #include <qmath.h>
+#include <qspinbox.h>
+#include <qlabel.h>
 
 using namespace Eigen;
 
@@ -19,6 +21,7 @@ OptimaPlotter::OptimaPlotter( QWidget *parent, Qt::WFlags flags )
 	ui.setupUi( this );
 
 	initPlotWidget();
+	setupToolbar();
 
 	connect( ui.actionPick, SIGNAL( activated() ), this, SLOT( onPickModeActivated() ) );
 	connect( ui.actionPan, SIGNAL( activated() ), this, SLOT( onPanModeActivated() ) );
@@ -56,7 +59,7 @@ void OptimaPlotter::onPointAdded( const QPointF& point )
 
 void OptimaPlotter::onExecute()
 {
-	const int polynomialDegree = 4;
+	const int polynomialDegree = m_polynomialDegreeSpinBox->value();
 	const int samplesCount = 100000;
 	QVector<QPointF> samples;
 
@@ -160,4 +163,20 @@ void OptimaPlotter::onEventLoopStarted()
 void OptimaPlotter::onReset()
 {
 	m_plotWidget->reset();
+}
+
+void OptimaPlotter::setupToolbar()
+{
+	QLabel* polynomialDegreeLabel = new QLabel( tr( "Polynomial Degree:" ) );
+	polynomialDegreeLabel->setMargin( 3 );
+	ui.mainToolBar->addWidget( polynomialDegreeLabel );
+
+	m_polynomialDegreeSpinBox = new QSpinBox;
+	ui.mainToolBar->addWidget( m_polynomialDegreeSpinBox );
+	m_polynomialDegreeSpinBox->setMinimum( 1 );
+	m_polynomialDegreeSpinBox->setMaximum( 4 );
+	m_polynomialDegreeSpinBox->setValue( 3 );
+	m_polynomialDegreeSpinBox->setToolTip( tr( "Polynomial Degree" ) );
+
+	polynomialDegreeLabel->setBuddy( m_polynomialDegreeSpinBox );
 }
