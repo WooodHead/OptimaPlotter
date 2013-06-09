@@ -22,3 +22,5 @@ QWT/
 */Debug/*
 */Release/*
 *.opensdf
+*.suo
+OptimaPlotter/OptimaPlotter.suo
