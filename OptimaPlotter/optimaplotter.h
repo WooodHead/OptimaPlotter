@@ -18,6 +18,7 @@ public:
 private:
 	void initPlotWidget();
 	void setupToolbar();
+	void setupAnimation();
 
 public slots:
 	void onReset();

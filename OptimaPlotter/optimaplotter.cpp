@@ -7,6 +7,7 @@
 #include <qmath.h>
 #include <qspinbox.h>
 #include <qlabel.h>
+#include <qpropertyanimation.h>
 
 using namespace Eigen;
 
@@ -22,6 +23,7 @@ OptimaPlotter::OptimaPlotter( QWidget *parent, Qt::WFlags flags )
 
 	initPlotWidget();
 	setupToolbar();
+	setupAnimation();
 
 	connect( ui.actionPick, SIGNAL( activated() ), this, SLOT( onPickModeActivated() ) );
 	connect( ui.actionPan, SIGNAL( activated() ), this, SLOT( onPanModeActivated() ) );
@@ -179,4 +181,14 @@ void OptimaPlotter::setupToolbar()
 	m_polynomialDegreeSpinBox->setToolTip( tr( "Polynomial Degree" ) );
 
 	polynomialDegreeLabel->setBuddy( m_polynomialDegreeSpinBox );
+}
+
+void OptimaPlotter::setupAnimation()
+{
+	QPropertyAnimation* animation = new QPropertyAnimation( this, "windowOpacity" );
+	animation->setDuration( 1500 );
+	animation->setStartValue( 0.0 );
+	animation->setEndValue( 1.0 );
+	animation->setEasingCurve( QEasingCurve::InOutExpo );
+	animation->start();
 }
