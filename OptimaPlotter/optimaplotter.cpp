@@ -8,6 +8,7 @@
 #include <qspinbox.h>
 #include <qlabel.h>
 #include <qpropertyanimation.h>
+#include <qparallelanimationgroup.h>
 
 using namespace Eigen;
 
@@ -185,10 +186,14 @@ void OptimaPlotter::setupToolbar()
 
 void OptimaPlotter::setupAnimation()
 {
-	QPropertyAnimation* animation = new QPropertyAnimation( this, "windowOpacity" );
-	animation->setDuration( 1500 );
-	animation->setStartValue( 0.0 );
-	animation->setEndValue( 1.0 );
-	animation->setEasingCurve( QEasingCurve::InOutExpo );
+	QParallelAnimationGroup* animation = new QParallelAnimationGroup( this );
+
+	QPropertyAnimation* opacityAnimation = new QPropertyAnimation( this, "windowOpacity" );
+	opacityAnimation->setDuration( 1500 );
+	opacityAnimation->setStartValue( 0.0 );
+	opacityAnimation->setEndValue( 1.0 );
+	opacityAnimation->setEasingCurve( QEasingCurve::InOutExpo );
+
+	animation->addAnimation( opacityAnimation );
 	animation->start();
 }
