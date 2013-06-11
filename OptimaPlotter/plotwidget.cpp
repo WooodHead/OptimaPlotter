@@ -11,6 +11,7 @@
 #include "qwt_plot_curve.h"
 #include "qwt_plot_marker.h"
 #include "qwt_symbol.h"
+#include "qwt_plot_grid.h"
 
 #include <qpen.h>
 #include <qdebug.h>
@@ -28,7 +29,12 @@ PlotWidget::PlotWidget( QWidget* parent ): QwtPlot( parent )
 	m_plotMagnifier = new PlotMagnifier( canvas() );
 
 	m_plotCurve = new QwtPlotCurve();
+	m_plotCurve->setPen( Qt::blue, 2.0, Qt::SolidLine );
 	m_plotCurve->attach( this );
+
+	m_plotGrid = new QwtPlotGrid;
+    m_plotGrid->setMajorPen( Qt::black, 1, Qt::DotLine );
+    m_plotGrid->attach( this );
 
 	connect( m_plotPicker, SIGNAL( selected( const QPointF& ) ),
 		this, SIGNAL( pointPicked( const QPointF& ) ) );
@@ -90,7 +96,7 @@ void PlotWidget::insertMarker( const QPointF& point )
 	}
 
 	QwtPlotMarker* plotMarker = new QwtPlotMarker();
-	plotMarker->setSymbol( new QwtSymbol( QwtSymbol::XCross, Qt::red, Qt::SolidLine, QSize( 10, 10 ) ) );
+	plotMarker->setSymbol( new QwtSymbol( QwtSymbol::XCross, Qt::red, QPen( Qt::red, 2.0 ), QSize( 10, 10 ) ) );
 	plotMarker->setValue( point );
 	plotMarker->attach( this );
 }

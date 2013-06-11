@@ -11,6 +11,7 @@ class QwtPickerClickPointMachine;
 class PlotPanner;
 class PlotMagnifier;
 class QwtPlotCurve;
+class QwtPlotGrid;
 
 class PlotWidget : public QwtPlot
 {
@@ -45,6 +46,7 @@ private:
 	QwtPickerClickPointMachine* m_pickerClickPointMachine;
 	PlotPanner* m_plotPanner;
 	PlotMagnifier* m_plotMagnifier;
+	QwtPlotGrid* m_plotGrid;
 };
 
 #endif //PLOTWIDGET_H
