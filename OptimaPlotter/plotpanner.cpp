@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "plotpanner.h"
+#include "optimaplotter.h"
 
 #include "qevent.h"
 #include "qapplication.h"

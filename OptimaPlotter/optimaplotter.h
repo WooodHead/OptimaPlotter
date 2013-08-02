@@ -6,6 +6,7 @@
 
 class PlotWidget;
 class QSpinBox;
+class QTranslator;
 
 class OptimaPlotter : public QMainWindow
 {
@@ -17,8 +18,9 @@ public:
 
 private:
 	void initPlotWidget();
-	void setupToolbar();
+	void setupToolBar();
 	void setupAnimation();
+	void readSettings();
 
 public slots:
 	void onReset();
@@ -29,11 +31,13 @@ private slots:
 	void onPanModeActivated();
 	void onPointAdded( const QPointF& point );
 	void onExecute();
+	void onExecuteSettingsDialog();
 
 private:
 	Ui::OptimaPlotterClass ui;
 	PlotWidget* m_plotWidget;
 	QSpinBox* m_polynomialDegreeSpinBox;
+	QTranslator* m_translator;
 };
 
 #endif //OPTIMAPLOTTER_H

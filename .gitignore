@@ -24,3 +24,5 @@ QWT/
 *.opensdf
 *.suo
 OptimaPlotter/OptimaPlotter.suo
+*.aps
+*.qm

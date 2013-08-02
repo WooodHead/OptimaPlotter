@@ -36,6 +36,11 @@
     <Filter Include="STDAFX">
       <UniqueIdentifier>{b611056d-30ab-43c8-b15a-41e9d1563995}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Translation Files">
+      <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
+      <Extensions>ts</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -83,6 +88,15 @@
     <ClCompile Include="GeneratedFiles\Release\moc_plotmagnifier.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="settingsdialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_settingsdialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_settingsdialog.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_optimaplotter.h">
@@ -90,6 +104,9 @@
     </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>STDAFX</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_settingsdialog.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -111,8 +128,19 @@
     <CustomBuild Include="plotmagnifier.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="settingsdialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="settingsdialog.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="OptimaPlotter.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="optimaplotter_hy.ts">
+      <Filter>Translation Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

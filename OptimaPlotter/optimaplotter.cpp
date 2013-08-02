@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "optimaplotter.h"
 #include "plotwidget.h"
+#include "settingsdialog.h"
 
 #include <qdebug.h>
 #include <qpen.h>
@@ -9,6 +10,9 @@
 #include <qlabel.h>
 #include <qpropertyanimation.h>
 #include <qparallelanimationgroup.h>
+#include <qtranslator.h>
+#include <qsettings.h>
+#include <qmessagebox.h>
 
 using namespace Eigen;
 
@@ -20,15 +24,19 @@ bool lessThanForTwoPointsOnXAxis( const QPointF& p1, const QPointF& p2 )
 OptimaPlotter::OptimaPlotter( QWidget *parent, Qt::WFlags flags )
 	: QMainWindow( parent, flags )
 {
+	m_translator = new QTranslator( this );
+	readSettings();
+
 	ui.setupUi( this );
 
 	initPlotWidget();
-	setupToolbar();
+	setupToolBar();
 	setupAnimation();
 
 	connect( ui.actionPick, SIGNAL( activated() ), this, SLOT( onPickModeActivated() ) );
 	connect( ui.actionPan, SIGNAL( activated() ), this, SLOT( onPanModeActivated() ) );
 	connect( ui.actionExecute, SIGNAL( triggered() ), this, SLOT( onExecute() ) );
+	connect( ui.actionSettings, SIGNAL( triggered() ), this, SLOT( onExecuteSettingsDialog() ) );
 	connect( ui.actionReset, SIGNAL( triggered() ), this, SLOT( onReset() ) );
 
 	connect( m_plotWidget, SIGNAL( pointPicked( const QPointF& ) ), this, SLOT( onPointAdded( const QPointF& ) ) );
@@ -168,7 +176,7 @@ void OptimaPlotter::onReset()
 	m_plotWidget->reset();
 }
 
-void OptimaPlotter::setupToolbar()
+void OptimaPlotter::setupToolBar()
 {
 	QLabel* polynomialDegreeLabel = new QLabel( tr( "Polynomial Degree:" ) );
 	polynomialDegreeLabel->setMargin( 3 );
@@ -196,4 +204,44 @@ void OptimaPlotter::setupAnimation()
 
 	animation->addAnimation( opacityAnimation );
 	animation->start();
+}
+
+void OptimaPlotter::onExecuteSettingsDialog()
+{
+	SettingsDialog settingsDialog;
+	if( settingsDialog.exec() == QDialog::Accepted )
+	{
+		if( settingsDialog.languageNeedsToBeUpdated() )
+		{
+			QSettings settings( "BardiSolutions", "OptimaPlotter" );
+			settings.setValue( "language", settingsDialog.currentLanguage() );
+			QMessageBox::information( this, tr( "Information" ), 
+				tr( "Language settings will be updated after retarting the application" ), QMessageBox::Ok );
+		}
+	}
+}
+
+void OptimaPlotter::readSettings()
+{
+	QSettings settings( "BardiSolutions", "OptimaPlotter" );
+	int language = settings.value( "language", SettingsDialog::SETTINGS_LANG_HY ).toInt();
+
+	switch( language )
+	{
+	case SettingsDialog::SETTINGS_LANG_EN:
+		{
+			QApplication::removeTranslator( m_translator );
+			break;
+		}
+	case SettingsDialog::SETTINGS_LANG_HY:
+		{
+			m_translator->load( ":/OptimaPlotter/optimaplotter_hy.qm" );
+			QApplication::installTranslator( m_translator );
+			break;
+		}
+	default:
+		{
+			break;
+		}
+	}
 }
