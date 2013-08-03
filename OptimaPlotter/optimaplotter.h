@@ -7,6 +7,7 @@
 class PlotWidget;
 class QSpinBox;
 class QTranslator;
+class QLabel;
 
 class OptimaPlotter : public QMainWindow
 {
@@ -22,6 +23,9 @@ private:
 	void setupAnimation();
 	void readSettings();
 
+	void retranslateUi();
+	virtual void changeEvent( QEvent* event );
+
 public slots:
 	void onReset();
 	void onEventLoopStarted();
@@ -36,6 +40,7 @@ private slots:
 private:
 	Ui::OptimaPlotterClass ui;
 	PlotWidget* m_plotWidget;
+	QLabel* m_polynomialDegreeLabel;
 	QSpinBox* m_polynomialDegreeSpinBox;
 	QTranslator* m_translator;
 };

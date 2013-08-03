@@ -32,3 +32,11 @@ bool SettingsDialog::languageNeedsToBeUpdated() const
 {
 	return m_languageNeedsToBeUpdated;
 }
+
+void SettingsDialog::changeEvent( QEvent* event )
+{
+	if( event->type() == QEvent::LanguageChange )
+		ui.retranslateUi( this );
+	else
+		QDialog::changeEvent( event );
+}

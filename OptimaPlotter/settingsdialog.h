@@ -26,6 +26,9 @@ private slots:
 	void onLanguageChanged( int index );
 
 private:
+	virtual void changeEvent( QEvent *event );
+
+private:
 	bool m_languageNeedsToBeUpdated;
 	Ui::SettingsDialog ui;
 };

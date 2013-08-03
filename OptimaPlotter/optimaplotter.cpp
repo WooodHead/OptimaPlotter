@@ -178,9 +178,9 @@ void OptimaPlotter::onReset()
 
 void OptimaPlotter::setupToolBar()
 {
-	QLabel* polynomialDegreeLabel = new QLabel( tr( "Polynomial Degree:" ) );
-	polynomialDegreeLabel->setMargin( 3 );
-	ui.mainToolBar->addWidget( polynomialDegreeLabel );
+	m_polynomialDegreeLabel = new QLabel( tr( "Polynomial Degree:" ) );
+	m_polynomialDegreeLabel->setMargin( 3 );
+	ui.mainToolBar->addWidget( m_polynomialDegreeLabel );
 
 	m_polynomialDegreeSpinBox = new QSpinBox;
 	ui.mainToolBar->addWidget( m_polynomialDegreeSpinBox );
@@ -189,7 +189,7 @@ void OptimaPlotter::setupToolBar()
 	m_polynomialDegreeSpinBox->setValue( 3 );
 	m_polynomialDegreeSpinBox->setToolTip( tr( "Polynomial Degree" ) );
 
-	polynomialDegreeLabel->setBuddy( m_polynomialDegreeSpinBox );
+	m_polynomialDegreeLabel->setBuddy( m_polynomialDegreeSpinBox );
 }
 
 void OptimaPlotter::setupAnimation()
@@ -215,8 +215,7 @@ void OptimaPlotter::onExecuteSettingsDialog()
 		{
 			QSettings settings( "BardiSolutions", "OptimaPlotter" );
 			settings.setValue( "language", settingsDialog.currentLanguage() );
-			QMessageBox::information( this, tr( "Information" ), 
-				tr( "Language settings will be updated after retarting the application" ), QMessageBox::Ok );
+			readSettings();
 		}
 	}
 }
@@ -244,4 +243,19 @@ void OptimaPlotter::readSettings()
 			break;
 		}
 	}
+}
+
+void OptimaPlotter::retranslateUi()
+{
+	ui.retranslateUi( this );
+	m_polynomialDegreeSpinBox->setToolTip( tr( "Polynomial Degree" ) );
+	m_polynomialDegreeLabel->setText( tr( "Polynomial Degree:" ) );
+}
+
+void OptimaPlotter::changeEvent( QEvent* event )
+{
+	if( event->type() == QEvent::LanguageChange )
+		retranslateUi();
+	else
+		QMainWindow::changeEvent( event );
 }
