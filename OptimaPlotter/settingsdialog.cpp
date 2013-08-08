@@ -7,6 +7,8 @@ SettingsDialog::SettingsDialog( QWidget* parent, Qt::WindowFlags windowFlags ) :
 {
 	ui.setupUi( this );
 
+	setWindowFlags( this->windowFlags() & ~Qt::WindowContextHelpButtonHint );
+
 	QSettings settings( "BardiSolutions", "OptimaPlotter" );
 	ui.comboBoxLanguage->setCurrentIndex( settings.value( "language", Language::SETTINGS_LANG_HY ).toInt() );
 
