@@ -2,6 +2,7 @@
 #include "optimaplotter.h"
 #include "plotwidget.h"
 #include "settingsdialog.h"
+#include "ialgorithm.h"
 
 #include <qdebug.h>
 #include <qpen.h>
@@ -13,13 +14,8 @@
 #include <qtranslator.h>
 #include <qsettings.h>
 #include <qmessagebox.h>
-
-using namespace Eigen;
-
-bool lessThanForTwoPointsOnXAxis( const QPointF& p1, const QPointF& p2 )
-{
-	return p1.x() < p2.x();
-}
+#include <qdir.h>
+#include <qpluginloader.h>
 
 OptimaPlotter::OptimaPlotter( QWidget *parent, Qt::WFlags flags )
 	: QMainWindow( parent, flags )
@@ -32,6 +28,8 @@ OptimaPlotter::OptimaPlotter( QWidget *parent, Qt::WFlags flags )
 	initPlotWidget();
 	setupToolBar();
 	setupAnimation();
+
+	onLoadPlugin();
 
 	connect( ui.actionPick, SIGNAL( activated() ), this, SLOT( onPickModeActivated() ) );
 	connect( ui.actionPan, SIGNAL( activated() ), this, SLOT( onPanModeActivated() ) );
@@ -70,90 +68,20 @@ void OptimaPlotter::onPointAdded( const QPointF& point )
 
 void OptimaPlotter::onExecute()
 {
-	const int polynomialDegree = m_polynomialDegreeSpinBox->value();
-	const int samplesCount = 100000;
-	QVector<QPointF> samples;
+	m_currentAlgorithm->setPropertyValueByTagName( "polynomial_degree", m_polynomialDegreeSpinBox->value() );
+	m_currentAlgorithm->setPropertyValueByTagName( "samples_count", 100000 );
 
+	QVector<QPointF> samples;
 	QVector<QPointF> points;
 
 	m_plotWidget->markerPointsVector( points );
 
 	if( points.empty() )
-	{
 		return;
-	}
 
-	qSort( points.begin(), points.end(), lessThanForTwoPointsOnXAxis );
-
-	const double step = qAbs( points.first().x() -  points.last().x() ) / ( samplesCount - 1 );
-
-	const int columnCount = polynomialDegree + 1;
-	const int rowCount = points.size();
-
-	MatrixXf matrixA( rowCount, columnCount );
-	MatrixXf matrixAPlus( columnCount, rowCount );
-	VectorXf vectorB( rowCount );
-	VectorXf result( columnCount );
-
-	int row = 0;
-	foreach( QPointF point, points )
-	{
-		vectorB( row ) = point.y();
-
-		for( int column = 0; column < columnCount; ++column )
-		{
-			matrixA( row, column ) = qPow( point.x(), column );
-		}
-
-		++row;
-	}
-
-	JacobiSVD<MatrixXf> svd( matrixA, ComputeFullU | ComputeFullV );
-
-	MatrixXf matrixSPlus = MatrixXf::Zero( columnCount, rowCount );
-
-	const JacobiSVD<MatrixXf>::SingularValuesType& singularValues = svd.singularValues();
-	for( int i = 0; i < singularValues.size(); i++ )
-	{
-		float value = svd.singularValues()[i];
-		if( value ) //TODO: is this check needed?
-		{
-			matrixSPlus( i, i ) = 1.0 / value;
-		}
-	}
-
-	matrixAPlus = svd.matrixV() * matrixSPlus * svd.matrixU().transpose();
-	result = matrixAPlus * vectorB;
-
-	int i = 0;
-	double x = points.first().x();
-	int pointIndex = 1;
-
-	while( i != samplesCount + points.size() )
-	{
-		double y = 0;
-		double xTemp = 1;
-		
-		for( int j = 0; j <= polynomialDegree; j++ )
-		{
-			y += xTemp * result( j );
-			xTemp *= x;
-		}
-
-		samples.append( QPointF( x, y ) );
-		//TODO: optimize
-		if( pointIndex < points.size() && x + step >= points.at( pointIndex ).x() )
-		{
-			x = points.at( pointIndex ).x();
-			++pointIndex;
-		}
-		else
-		{
-			x += step;
-		}
-		++i;
-	}
-
+	m_currentAlgorithm->initWithMarkers( points );
+	m_currentAlgorithm->evaluate();
+	m_currentAlgorithm->output( samples );
 	m_plotWidget->setCurveSamples( samples );
 	m_plotWidget->replot();
 }
@@ -258,4 +186,21 @@ void OptimaPlotter::changeEvent( QEvent* event )
 		retranslateUi();
 	else
 		QMainWindow::changeEvent( event );
+}
+
+void OptimaPlotter::onLoadPlugin()
+{
+	 QDir pluginsDir( qApp->applicationDirPath() );
+
+	 foreach ( QString fileName, pluginsDir.entryList( QDir::Files ) )
+	 {
+         QPluginLoader pluginLoader( pluginsDir.absoluteFilePath( fileName ) );
+         QObject* plugin = pluginLoader.instance();
+         if( plugin )
+		 {
+             m_currentAlgorithm = qobject_cast<IAlgorithm*>( plugin );
+			 break;
+		 }
+     }
+
 }

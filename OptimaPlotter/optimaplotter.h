@@ -5,6 +5,7 @@
 #include "ui_optimaplotter.h"
 
 class PlotWidget;
+class IAlgorithm;
 class QSpinBox;
 class QTranslator;
 class QLabel;
@@ -36,6 +37,7 @@ private slots:
 	void onPointAdded( const QPointF& point );
 	void onExecute();
 	void onExecuteSettingsDialog();
+	void onLoadPlugin();
 
 private:
 	Ui::OptimaPlotterClass ui;
@@ -43,6 +45,7 @@ private:
 	QLabel* m_polynomialDegreeLabel;
 	QSpinBox* m_polynomialDegreeSpinBox;
 	QTranslator* m_translator;
+	IAlgorithm* m_currentAlgorithm;
 };
 
 #endif //OPTIMAPLOTTER_H

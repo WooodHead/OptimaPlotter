@@ -4,11 +4,20 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OptimaPlotter", "OptimaPlotter.vcxproj", "{DABFA861-56EF-4185-8EAE-E360B991299A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{A45D3A21-DAF1-376F-91C7-EAA40C52B2F7} = {A45D3A21-DAF1-376F-91C7-EAA40C52B2F7}
+		{31B1CEB8-7A4A-43DE-9AFF-FAAA1FBEEFF8} = {31B1CEB8-7A4A-43DE-9AFF-FAAA1FBEEFF8}
+		{3A3C31D1-C16C-4CE5-AC10-F424E248046B} = {3A3C31D1-C16C-4CE5-AC10-F424E248046B}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qwt", "..\QWT\src\qwt.vcxproj", "{A45D3A21-DAF1-376F-91C7-EAA40C52B2F7}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "event_filter", "..\QWT\examples\event_filter\event_filter\event_filter.vcxproj", "{A32485CA-2A9C-46DA-92BC-C5784240EB1D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PolynomialAlgorithm", "..\PolynomialAlgorithm\PolynomialAlgorithm.vcxproj", "{3A3C31D1-C16C-4CE5-AC10-F424E248046B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{31B1CEB8-7A4A-43DE-9AFF-FAAA1FBEEFF8} = {31B1CEB8-7A4A-43DE-9AFF-FAAA1FBEEFF8}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Interfaces", "..\Interfaces\Interfaces.vcxproj", "{31B1CEB8-7A4A-43DE-9AFF-FAAA1FBEEFF8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,6 +37,14 @@ Global
 		{A32485CA-2A9C-46DA-92BC-C5784240EB1D}.Debug|Win32.Build.0 = Debug|Win32
 		{A32485CA-2A9C-46DA-92BC-C5784240EB1D}.Release|Win32.ActiveCfg = Release|Win32
 		{A32485CA-2A9C-46DA-92BC-C5784240EB1D}.Release|Win32.Build.0 = Release|Win32
+		{3A3C31D1-C16C-4CE5-AC10-F424E248046B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3A3C31D1-C16C-4CE5-AC10-F424E248046B}.Debug|Win32.Build.0 = Debug|Win32
+		{3A3C31D1-C16C-4CE5-AC10-F424E248046B}.Release|Win32.ActiveCfg = Release|Win32
+		{3A3C31D1-C16C-4CE5-AC10-F424E248046B}.Release|Win32.Build.0 = Release|Win32
+		{31B1CEB8-7A4A-43DE-9AFF-FAAA1FBEEFF8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{31B1CEB8-7A4A-43DE-9AFF-FAAA1FBEEFF8}.Debug|Win32.Build.0 = Debug|Win32
+		{31B1CEB8-7A4A-43DE-9AFF-FAAA1FBEEFF8}.Release|Win32.ActiveCfg = Release|Win32
+		{31B1CEB8-7A4A-43DE-9AFF-FAAA1FBEEFF8}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
