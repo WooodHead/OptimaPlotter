@@ -9,6 +9,7 @@ class IAlgorithm;
 class QSpinBox;
 class QTranslator;
 class QLabel;
+class QComboBox;
 
 class OptimaPlotter : public QMainWindow
 {
@@ -37,15 +38,17 @@ private slots:
 	void onPointAdded( const QPointF& point );
 	void onExecute();
 	void onExecuteSettingsDialog();
-	void onLoadPlugin();
+	void onLoadPlugins();
 
 private:
 	Ui::OptimaPlotterClass ui;
 	PlotWidget* m_plotWidget;
 	QLabel* m_polynomialDegreeLabel;
 	QSpinBox* m_polynomialDegreeSpinBox;
+	QComboBox* m_algorithmSelectorComboBox;
 	QTranslator* m_translator;
 	IAlgorithm* m_currentAlgorithm;
+	QList<IAlgorithm*> m_availableAlgorithms;
 };
 
 #endif //OPTIMAPLOTTER_H

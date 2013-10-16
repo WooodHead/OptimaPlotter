@@ -3,11 +3,13 @@
 #include "plotwidget.h"
 #include "settingsdialog.h"
 #include "ialgorithm.h"
+#include "globals.h"
 
 #include <qdebug.h>
 #include <qpen.h>
 #include <qmath.h>
 #include <qspinbox.h>
+#include <qcombobox.h>
 #include <qlabel.h>
 #include <qpropertyanimation.h>
 #include <qparallelanimationgroup.h>
@@ -18,18 +20,20 @@
 #include <qpluginloader.h>
 
 OptimaPlotter::OptimaPlotter( QWidget *parent, Qt::WFlags flags )
-	: QMainWindow( parent, flags )
+	: QMainWindow( parent, flags ), m_currentAlgorithm( 0 )
 {
 	m_translator = new QTranslator( this );
-	readSettings();
-
+	
 	ui.setupUi( this );
 
 	initPlotWidget();
 	setupToolBar();
 	setupAnimation();
 
-	onLoadPlugin();
+	onLoadPlugins();
+
+	readSettings();
+	retranslateUi();
 
 	connect( ui.actionPick, SIGNAL( activated() ), this, SLOT( onPickModeActivated() ) );
 	connect( ui.actionPan, SIGNAL( activated() ), this, SLOT( onPanModeActivated() ) );
@@ -106,6 +110,11 @@ void OptimaPlotter::onReset()
 
 void OptimaPlotter::setupToolBar()
 {
+	m_algorithmSelectorComboBox = new QComboBox;
+	ui.mainToolBar->addWidget( m_algorithmSelectorComboBox );
+
+	ui.mainToolBar->addSeparator();
+
 	m_polynomialDegreeLabel = new QLabel( tr( "Polynomial Degree:" ) );
 	m_polynomialDegreeLabel->setMargin( 3 );
 	ui.mainToolBar->addWidget( m_polynomialDegreeLabel );
@@ -151,16 +160,19 @@ void OptimaPlotter::onExecuteSettingsDialog()
 void OptimaPlotter::readSettings()
 {
 	QSettings settings( "BardiSolutions", "OptimaPlotter" );
-	int language = settings.value( "language", SettingsDialog::SETTINGS_LANG_HY ).toInt();
+	int language = settings.value( "language", Globals::LANG_HY ).toInt();
+
+	if( m_currentAlgorithm )
+		m_currentAlgorithm->applyLanguage( language );
 
 	switch( language )
 	{
-	case SettingsDialog::SETTINGS_LANG_EN:
+	case Globals::LANG_EN:
 		{
 			QApplication::removeTranslator( m_translator );
 			break;
 		}
-	case SettingsDialog::SETTINGS_LANG_HY:
+	case Globals::LANG_HY:
 		{
 			m_translator->load( ":/OptimaPlotter/optimaplotter_hy.qm" );
 			QApplication::installTranslator( m_translator );
@@ -178,6 +190,14 @@ void OptimaPlotter::retranslateUi()
 	ui.retranslateUi( this );
 	m_polynomialDegreeSpinBox->setToolTip( tr( "Polynomial Degree" ) );
 	m_polynomialDegreeLabel->setText( tr( "Polynomial Degree:" ) );
+	
+	const int algorithmSelectorCurrentIndex = m_algorithmSelectorComboBox->currentIndex();
+	m_algorithmSelectorComboBox->clear();
+	
+	foreach( IAlgorithm* algorithm, m_availableAlgorithms )
+	{
+		 m_algorithmSelectorComboBox->addItem( algorithm->name(), algorithm->tagName() );
+	}
 }
 
 void OptimaPlotter::changeEvent( QEvent* event )
@@ -188,7 +208,7 @@ void OptimaPlotter::changeEvent( QEvent* event )
 		QMainWindow::changeEvent( event );
 }
 
-void OptimaPlotter::onLoadPlugin()
+void OptimaPlotter::onLoadPlugins()
 {
 	 QDir pluginsDir( qApp->applicationDirPath() );
 
@@ -198,9 +218,10 @@ void OptimaPlotter::onLoadPlugin()
          QObject* plugin = pluginLoader.instance();
          if( plugin )
 		 {
-             m_currentAlgorithm = qobject_cast<IAlgorithm*>( plugin );
-			 break;
+			 IAlgorithm* algorithm = qobject_cast<IAlgorithm*>( plugin );
+             m_currentAlgorithm = algorithm;
+			 m_availableAlgorithms.append( algorithm );
+			 m_algorithmSelectorComboBox->addItem( algorithm->name(), algorithm->tagName() );
 		 }
      }
-
 }

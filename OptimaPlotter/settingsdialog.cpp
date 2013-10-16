@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "settingsdialog.h"
+#include "globals.h"
 
 #include "qsettings.h"
 
@@ -10,7 +11,7 @@ SettingsDialog::SettingsDialog( QWidget* parent, Qt::WindowFlags windowFlags ) :
 	setWindowFlags( this->windowFlags() & ~Qt::WindowContextHelpButtonHint );
 
 	QSettings settings( "BardiSolutions", "OptimaPlotter" );
-	ui.comboBoxLanguage->setCurrentIndex( settings.value( "language", Language::SETTINGS_LANG_HY ).toInt() );
+	ui.comboBoxLanguage->setCurrentIndex( settings.value( "language", Globals::LANG_HY ).toInt() );
 
 	connect( ui.comboBoxLanguage, SIGNAL( currentIndexChanged( int ) ), SLOT( onLanguageChanged( int ) ) );
 }

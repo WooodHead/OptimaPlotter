@@ -13,6 +13,10 @@ public:
 	virtual ~PolynomialAlgorithm();
 
 	virtual void evaluate();
+	virtual QString name() const;
+	virtual QString tagName() const;
+
+	virtual void applyLanguage( int language );
 };
 
 #endif // POLYNOMIALALGORITHM_H

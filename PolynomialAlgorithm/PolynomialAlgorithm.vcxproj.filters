@@ -36,6 +36,11 @@
     <Filter Include="STDAFX">
       <UniqueIdentifier>{0ca543df-8e27-49eb-92d8-121709c3e32f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Translation Files">
+      <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
+      <Extensions>ts</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="polynomialalgorithm.cpp">
@@ -50,15 +55,26 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>STDAFX</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\qrc_polynomialalgorithm.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="polynomialalgorithm.h">
       <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="polynomialalgorithm.qrc">
+      <Filter>Resource Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
       <Filter>STDAFX</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="polynomialalgorithm_hy.ts">
+      <Filter>Translation Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

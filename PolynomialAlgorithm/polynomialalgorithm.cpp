@@ -1,7 +1,10 @@
 #include "stdafx.h"
 #include "polynomialalgorithm.h"
+#include "globals.h"
 
 #include <qmath.h>
+#include <qtranslator.h>
+#include <qapplication.h>
 
 using namespace Eigen;
 
@@ -106,6 +109,38 @@ void PolynomialAlgorithm::evaluate()
 			x += step;
 		}
 		++i;
+	}
+}
+
+QString PolynomialAlgorithm::name() const
+{
+	return tr( "Polynomial" );
+}
+
+QString PolynomialAlgorithm::tagName() const
+{
+	return "polynomial";
+}
+
+void PolynomialAlgorithm::applyLanguage( int language )
+{
+	switch( language )
+	{
+	case ( int )Globals::LANG_EN:
+		{
+			QApplication::removeTranslator( m_translator );
+			break;
+		}
+	case ( int )Globals::LANG_HY:
+		{
+			m_translator->load( ":/PolynomialAlgorithm/polynomialalgorithm_hy.qm" );
+			QApplication::installTranslator( m_translator );
+			break;
+		}
+	default:
+		{
+			break;
+		}
 	}
 }
 

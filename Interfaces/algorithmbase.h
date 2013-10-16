@@ -8,6 +8,8 @@
 #include <qstring.h>
 #include <qvariant.h>
 
+class QTranslator;
+
 typedef QMap<QString, QVariant> PROPERTYMAP;
 
 class AlgorithmBase : public QObject, public IAlgorithm
@@ -28,6 +30,7 @@ protected:
 	PROPERTYMAP m_propertyMap;
 	QVector<QPointF> m_markers;
 	QVector<QPointF> m_samples;
+	QTranslator* m_translator;
 };
 
 #endif //ALGORITHMBASE_H

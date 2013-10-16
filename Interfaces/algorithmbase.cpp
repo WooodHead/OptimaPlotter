@@ -1,9 +1,11 @@
 #include "stdafx.h"
 #include "algorithmbase.h"
 
+#include <qtranslator.h>
+
 AlgorithmBase::AlgorithmBase( QObject* parent ) : QObject( parent ), IAlgorithm()
 {
-
+	m_translator = new QTranslator( this );
 }
 
 AlgorithmBase::~AlgorithmBase()
