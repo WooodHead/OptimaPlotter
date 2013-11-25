@@ -68,6 +68,9 @@ void OptimaPlotter::onModeActivated()
 
 void OptimaPlotter::onPickModeActivated()
 {
+	if( m_currentAlgorithm == 0 )
+		return;
+
 	m_plotWidget->setPickerEnabled( true );
 	m_plotWidget->setPannerEnabled( false );
 	m_plotWidget->setMagnifierEnabled( false );
@@ -78,6 +81,9 @@ void OptimaPlotter::onPickModeActivated()
 	
 void OptimaPlotter::onPanModeActivated()
 {
+	if( m_currentAlgorithm == 0 )
+		return;
+
 	m_plotWidget->setPickerEnabled( false );
 	m_plotWidget->setPannerEnabled( true );
 	m_plotWidget->setMagnifierEnabled( true );
@@ -101,6 +107,9 @@ void OptimaPlotter::onKnotAdded( double coordinate )
 
 void OptimaPlotter::onExecute()
 {
+	if( m_currentAlgorithm == 0 )
+		return;
+
 	m_currentAlgorithm->setPropertyValueByTagName( "polynomial_degree", m_polynomialDegreeSpinBox->value() );
 	m_currentAlgorithm->setPropertyValueByTagName( "samples_count", 100000 );
 
