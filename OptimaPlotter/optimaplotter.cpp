@@ -4,6 +4,7 @@
 #include "settingsdialog.h"
 #include "ialgorithm.h"
 #include "globals.h"
+#include "knotpicker.h"
 
 #include <qdebug.h>
 #include <qpen.h>
@@ -35,6 +36,9 @@ OptimaPlotter::OptimaPlotter( QWidget *parent, Qt::WFlags flags )
 	readSettings();
 	retranslateUi();
 
+	connect( ui.actionPick, SIGNAL( activated() ), this, SLOT( onModeActivated() ) );
+	connect( ui.actionPan, SIGNAL( activated() ), this, SLOT( onModeActivated() ) );
+
 	connect( ui.actionPick, SIGNAL( activated() ), this, SLOT( onPickModeActivated() ) );
 	connect( ui.actionPan, SIGNAL( activated() ), this, SLOT( onPanModeActivated() ) );
 	connect( ui.actionExecute, SIGNAL( triggered() ), this, SLOT( onExecute() ) );
@@ -42,6 +46,7 @@ OptimaPlotter::OptimaPlotter( QWidget *parent, Qt::WFlags flags )
 	connect( ui.actionReset, SIGNAL( triggered() ), this, SLOT( onReset() ) );
 
 	connect( m_plotWidget, SIGNAL( pointPicked( const QPointF& ) ), this, SLOT( onPointAdded( const QPointF& ) ) );
+	connect( m_plotWidget, SIGNAL( knotPicked( double ) ), this, SLOT( onKnotAdded( double ) ) );
 }
 
 OptimaPlotter::~OptimaPlotter()
@@ -49,11 +54,26 @@ OptimaPlotter::~OptimaPlotter()
 
 }
 
+void OptimaPlotter::onModeActivated()
+{
+	QList<QAction*> actions;
+	actions << ui.actionPick << ui.actionPan;
+
+	foreach( QAction* action, actions )
+	{
+		if( sender() != action )
+			action->setChecked( false );
+	}
+}
+
 void OptimaPlotter::onPickModeActivated()
 {
 	m_plotWidget->setPickerEnabled( true );
 	m_plotWidget->setPannerEnabled( false );
 	m_plotWidget->setMagnifierEnabled( false );
+
+	if( m_currentAlgorithm->flags() & Globals::ALGO_FLAG_KNOT_PICKER ) 
+		m_plotWidget->setKnotPickerEnabled( true );
 }
 	
 void OptimaPlotter::onPanModeActivated()
@@ -61,12 +81,21 @@ void OptimaPlotter::onPanModeActivated()
 	m_plotWidget->setPickerEnabled( false );
 	m_plotWidget->setPannerEnabled( true );
 	m_plotWidget->setMagnifierEnabled( true );
+
+	if( m_currentAlgorithm->flags() & Globals::ALGO_FLAG_KNOT_PICKER ) 
+		m_plotWidget->setKnotPickerEnabled( false );
 }
 
 void OptimaPlotter::onPointAdded( const QPointF& point )
 {
 	qDebug() << point;
 	m_plotWidget->insertMarker( point );
+	m_plotWidget->replot();
+}
+
+void OptimaPlotter::onKnotAdded( double coordinate )
+{
+	m_plotWidget->insertKnot( coordinate );
 	m_plotWidget->replot();
 }
 
@@ -84,8 +113,17 @@ void OptimaPlotter::onExecute()
 		return;
 
 	m_currentAlgorithm->initWithMarkers( points );
+
+	if( m_currentAlgorithm->flags() & Globals::ALGO_FLAG_KNOT_PICKER )
+	{
+		QVector<double> knots;
+		m_plotWidget->knotsVector( knots );
+		m_currentAlgorithm->initWithKnots( knots );
+	}
+
 	m_currentAlgorithm->evaluate();
 	m_currentAlgorithm->output( samples );
+
 	m_plotWidget->setCurveSamples( samples );
 	m_plotWidget->replot();
 }
@@ -93,13 +131,19 @@ void OptimaPlotter::onExecute()
 void OptimaPlotter::initPlotWidget()
 {
 	m_plotWidget = new PlotWidget( this );
+
+	// KnotPicker is not inited in PlotWidget constructor, because it requires
+	// QwtPlot as a parent and the PlotWidget is inherited from the QwtPlot class.
+	KnotPicker* knotPicker = new KnotPicker( m_plotWidget );
+	m_plotWidget->setKnotPicker( knotPicker );
+
 	setCentralWidget( m_plotWidget );
 }
 
 void OptimaPlotter::onEventLoopStarted()
 {
 	onPanModeActivated();
-	m_plotWidget->panToCenter();
+	//m_plotWidget->panToCenter();
 	onPickModeActivated();
 }
 
@@ -115,7 +159,7 @@ void OptimaPlotter::setupToolBar()
 
 	ui.mainToolBar->addSeparator();
 
-	m_polynomialDegreeLabel = new QLabel( tr( "Polynomial Degree:" ) );
+	m_polynomialDegreeLabel = new QLabel( tr( "Degree:" ) );
 	m_polynomialDegreeLabel->setMargin( 3 );
 	ui.mainToolBar->addWidget( m_polynomialDegreeLabel );
 
@@ -124,9 +168,11 @@ void OptimaPlotter::setupToolBar()
 	m_polynomialDegreeSpinBox->setMinimum( 1 );
 	m_polynomialDegreeSpinBox->setMaximum( 4 );
 	m_polynomialDegreeSpinBox->setValue( 3 );
-	m_polynomialDegreeSpinBox->setToolTip( tr( "Polynomial Degree" ) );
+	m_polynomialDegreeSpinBox->setToolTip( tr( "Degree" ) );
 
 	m_polynomialDegreeLabel->setBuddy( m_polynomialDegreeSpinBox );
+
+	connect( m_algorithmSelectorComboBox, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onAlgorithmSelectorIndexChanged( int ) ) );
 }
 
 void OptimaPlotter::setupAnimation()
@@ -162,8 +208,10 @@ void OptimaPlotter::readSettings()
 	QSettings settings( "BardiSolutions", "OptimaPlotter" );
 	int language = settings.value( "language", Globals::LANG_HY ).toInt();
 
-	if( m_currentAlgorithm )
-		m_currentAlgorithm->applyLanguage( language );
+	foreach( IAlgorithm* algorithm, m_availableAlgorithms )
+	{
+		algorithm->applyLanguage( language );
+	}
 
 	switch( language )
 	{
@@ -188,8 +236,8 @@ void OptimaPlotter::readSettings()
 void OptimaPlotter::retranslateUi()
 {
 	ui.retranslateUi( this );
-	m_polynomialDegreeSpinBox->setToolTip( tr( "Polynomial Degree" ) );
-	m_polynomialDegreeLabel->setText( tr( "Polynomial Degree:" ) );
+	m_polynomialDegreeSpinBox->setToolTip( tr( "Degree" ) );
+	m_polynomialDegreeLabel->setText( tr( "Degree:" ) );
 	
 	const int algorithmSelectorCurrentIndex = m_algorithmSelectorComboBox->currentIndex();
 	m_algorithmSelectorComboBox->clear();
@@ -224,4 +272,35 @@ void OptimaPlotter::onLoadPlugins()
 			 m_algorithmSelectorComboBox->addItem( algorithm->name(), algorithm->tagName() );
 		 }
      }
+}
+
+void OptimaPlotter::onAlgorithmSelectorIndexChanged( int index )
+{
+	QString itemData = m_algorithmSelectorComboBox->itemData( index ).toString();
+	if( !itemData.isNull() )
+	{
+		foreach( IAlgorithm* algorithm, m_availableAlgorithms )
+		{
+			if( algorithm->tagName() == itemData )
+			{
+				m_currentAlgorithm = algorithm;
+
+				if( m_currentAlgorithm->flags() & Globals::ALGO_FLAG_KNOT_PICKER )
+				{
+					m_plotWidget->setKnotsEnabled( true );
+					if( ui.actionPick )
+						m_plotWidget->setKnotPickerEnabled( true );
+				}
+				else
+				{
+					m_plotWidget->setKnotsEnabled( false );
+					if( ui.actionPick )
+						m_plotWidget->setKnotPickerEnabled( false );
+				}
+				break;
+			}
+		}
+	}
+
+	m_plotWidget->replot();
 }

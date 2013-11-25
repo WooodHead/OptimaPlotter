@@ -33,12 +33,16 @@ public slots:
 	void onEventLoopStarted();
 
 private slots:
+	void onModeActivated();
 	void onPickModeActivated();
 	void onPanModeActivated();
+
 	void onPointAdded( const QPointF& point );
+	void onKnotAdded( double coordinate );
 	void onExecute();
 	void onExecuteSettingsDialog();
 	void onLoadPlugins();
+	void onAlgorithmSelectorIndexChanged( int index );
 
 private:
 	Ui::OptimaPlotterClass ui;

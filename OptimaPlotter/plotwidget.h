@@ -7,6 +7,7 @@
 #include <qvector.h>
 
 class QwtPlotPicker;
+class KnotPicker;
 class QwtPickerClickPointMachine;
 class PlotPanner;
 class PlotMagnifier;
@@ -27,11 +28,18 @@ public:
 	bool isPickerEnabled() const;
 	void setMagnifierEnabled( bool enabled );
 	bool isMagnifierEnabled() const;
+	void setKnotPickerEnabled( bool enabled );
+	bool isKnotPickerEnabled() const;
 
+	void setKnotPicker( KnotPicker* knotPicker );
 	void setCurveSamples( const QVector<QPointF>& samples );
+	void setKnotsEnabled( bool enabled = true );
+
+	void insertKnot( double coordinate );
 	void insertMarker( const QPointF& point );
 
 	void markerPointsVector( QVector<QPointF>& points ) const;
+	void knotsVector( QVector<double>& knots ) const;
 
 	void panToCenter();
 
@@ -39,6 +47,7 @@ public:
 
 signals:
 	void pointPicked( const QPointF& point );
+	void knotPicked( double coordinate );
 
 private:
 	QwtPlotCurve* m_plotCurve;
@@ -47,6 +56,7 @@ private:
 	PlotPanner* m_plotPanner;
 	PlotMagnifier* m_plotMagnifier;
 	QwtPlotGrid* m_plotGrid;
+	KnotPicker* m_knotPicker;
 };
 
 #endif //PLOTWIDGET_H

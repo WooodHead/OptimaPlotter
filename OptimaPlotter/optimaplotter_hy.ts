@@ -4,16 +4,20 @@
 <context>
     <name>OptimaPlotter</name>
     <message>
-        <location filename="optimaplotter.cpp" line="115"/>
-        <location filename="optimaplotter.cpp" line="186"/>
-        <source>Polynomial Degree:</source>
-        <translation>Բազմադնամի աստիճանը.</translation>
+        <location filename="optimaplotter.cpp" line="134"/>
+        <location filename="optimaplotter.cpp" line="212"/>
+        <source>Degree:</source>
+        <translation>Աստիճանը.</translation>
     </message>
     <message>
-        <location filename="optimaplotter.cpp" line="124"/>
-        <location filename="optimaplotter.cpp" line="185"/>
+        <location filename="optimaplotter.cpp" line="143"/>
+        <location filename="optimaplotter.cpp" line="211"/>
+        <source>Degree</source>
+        <translation type="unfinished">Աստիճանը</translation>
+    </message>
+    <message>
         <source>Polynomial Degree</source>
-        <translation>Բազմանդամի աստիճանը</translation>
+        <translation type="obsolete">Բազմանդամի աստիճանը</translation>
     </message>
     <message>
         <source>Information</source>
@@ -37,40 +41,45 @@
         <translation>Գործիքներ</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="47"/>
+        <location filename="optimaplotter.ui" line="48"/>
         <source>Options</source>
         <translation>Ընտրանքներ</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="83"/>
+        <location filename="optimaplotter.ui" line="85"/>
         <source>Pick a point</source>
         <translation>Կետերի նշում</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="97"/>
+        <location filename="optimaplotter.ui" line="99"/>
         <source>Pan and Zoom</source>
         <translation>Տեղաշարժել/ Մեծացնել</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="100"/>
+        <location filename="optimaplotter.ui" line="102"/>
         <source>Pan and zoom the plot</source>
         <translation>Տեղաշարժել/ մեծացնել պատկերը</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="105"/>
+        <location filename="optimaplotter.ui" line="107"/>
         <source>Execute</source>
         <translation>Կատարել</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="110"/>
-        <location filename="optimaplotter.ui" line="113"/>
+        <location filename="optimaplotter.ui" line="112"/>
+        <location filename="optimaplotter.ui" line="115"/>
         <source>Reset</source>
         <translation>Մաքրել</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="118"/>
+        <location filename="optimaplotter.ui" line="120"/>
         <source>Settings</source>
         <translation>Կարգավորումներ</translation>
+    </message>
+    <message>
+        <location filename="optimaplotter.ui" line="128"/>
+        <source>Knot Picker</source>
+        <translation>Հիմնակետերի նշում</translation>
     </message>
 </context>
 <context>

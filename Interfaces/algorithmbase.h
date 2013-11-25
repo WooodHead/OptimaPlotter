@@ -20,15 +20,22 @@ public:
 	AlgorithmBase( QObject* parent = 0 );
 	virtual ~AlgorithmBase();
 
+	virtual Globals::AlgorithmFlags flags() const;
+
 	virtual void setPropertyValueByTagName( const QString& tagName, const QVariant& value );
 	virtual void getPropertyValueByTagName( const QString& tagName, QVariant& value, bool& ok ) const;
 
 	virtual void initWithMarkers( const QVector<QPointF>& points );
+	virtual void initWithKnots( const QVector<double>& knots );
 	virtual void output( QVector<QPointF>& points ) const;
+
+	virtual QString translatorPath( int language ) const = 0;
+	virtual void applyLanguage( int language );
 
 protected:
 	PROPERTYMAP m_propertyMap;
 	QVector<QPointF> m_markers;
+	QVector<double> m_knots;
 	QVector<QPointF> m_samples;
 	QTranslator* m_translator;
 };

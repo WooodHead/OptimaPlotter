@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "polynomialalgorithm.h"
+#include "splinealgorithm.h"
 #include "globals.h"
 
 #include <qmath.h>
@@ -13,17 +13,17 @@ bool lessThanForTwoPointsOnXAxis( const QPointF& p1, const QPointF& p2 )
 	return p1.x() < p2.x();
 }
 
-PolynomialAlgorithm::PolynomialAlgorithm()
+SplineAlgorithm::SplineAlgorithm()
 {
 
 }
 
-PolynomialAlgorithm::~PolynomialAlgorithm()
+SplineAlgorithm::~SplineAlgorithm()
 {
 
 }
 
-void PolynomialAlgorithm::evaluate()
+void SplineAlgorithm::evaluate()
 {
 	m_samples.clear();
 
@@ -38,13 +38,18 @@ void PolynomialAlgorithm::evaluate()
 	getPropertyValueByTagName( "polynomial_degree", value, ok );
 	if( !ok )
 		return;
-	const int polynomialDegree = value.toInt();
+	const int splineDegree = value.toInt();
 
 	qSort( m_markers.begin(), m_markers.end(), lessThanForTwoPointsOnXAxis );
+	qSort( m_knots.begin(), m_knots.end() );
+	//TODO: remove dubpicates!
 
 	const double step = qAbs( m_markers.first().x() -  m_markers.last().x() ) / ( samplesCount - 1 );
 
-	const int columnCount = polynomialDegree + 1;
+	const int columnCount = m_knots.count() - 1 - splineDegree;
+	if( columnCount < 1 )
+		return;
+
 	const int rowCount = m_markers.size();
 
 	MatrixXf matrixA( rowCount, columnCount );
@@ -56,13 +61,42 @@ void PolynomialAlgorithm::evaluate()
 	foreach( QPointF point, m_markers )
 	{
 		vectorB( row ) = point.y();
+		++row;
+	}
 
-		for( int column = 0; column < columnCount; ++column )
+	QList<QList<double> > lambdasOfAllBSplines; 
+	for( int column = 0; column < columnCount; ++column )
+	{
+		QList<double> lambdas;
+		for( int i = 0; i <= splineDegree + 1; ++i )
 		{
-			matrixA( row, column ) = qPow( point.x(), column );
+			double lambda = 1.0;
+			for( int j = 0; j <= splineDegree + 1; ++j )
+			{
+				if( i == j )
+					continue;
+
+				lambda /= ( m_knots.at( i + column ) - m_knots.at( j + column ) );
+			}
+			lambdas.append( lambda );
 		}
 
-		++row;
+		lambdasOfAllBSplines.append( lambdas );
+	}
+
+	for( int column = 0; column < columnCount; ++column )
+	{
+		for( int row = 0; row < rowCount; ++row )
+		{
+			double sum = 0.0;
+			for( int j = 0; j <= splineDegree + 1; ++j )
+			{
+				sum += lambdasOfAllBSplines.at( column ).at( j ) * 
+					splineHelperFunction( m_knots.at( j + column ), m_markers.at( row ).x(), splineDegree );
+			}
+
+			matrixA( row, column ) = sum;
+		}
 	}
 
 	JacobiSVD<MatrixXf> svd( matrixA, ComputeFullU | ComputeFullV );
@@ -91,10 +125,16 @@ void PolynomialAlgorithm::evaluate()
 		double y = 0;
 		double xTemp = 1;
 		
-		for( int j = 0; j <= polynomialDegree; j++ )
+		for( int j = 0; j < columnCount; ++j )
 		{
-			y += xTemp * result( j );
-			xTemp *= x;
+			double sum = 0;
+			for( int k = 0; k <= splineDegree + 1; ++k )
+			{
+				sum += lambdasOfAllBSplines.at( j ).at( k ) * 
+					splineHelperFunction( m_knots.at( k + j ), x, splineDegree );
+			}
+
+			y += sum * result( j );
 		}
 
 		m_samples.append( QPointF( x, y ) );
@@ -112,33 +152,39 @@ void PolynomialAlgorithm::evaluate()
 	}
 }
 
-QString PolynomialAlgorithm::name() const
+QString SplineAlgorithm::name() const
 {
-	return tr( "Polynomial" );
+	return tr( "Spline" );
 }
 
-QString PolynomialAlgorithm::tagName() const
+QString SplineAlgorithm::tagName() const
 {
-	return "polynomial";
+	return "spline";
 }
 
-QString PolynomialAlgorithm::translatorPath( int language ) const
+QString SplineAlgorithm::translatorPath( int language ) const
 {
 	switch( language )
 	{
 	case ( int )Globals::LANG_HY:
 		{
-			return ":/polynomialalgorithm/polynomialalgorithm_hy.qm";
+			return ":/splinealgorithm/splinealgorithm_hy.qm";
 		}
 	default:
 		return QString();
 	}
 }
 
-Globals::AlgorithmFlags PolynomialAlgorithm::flags() const
+double SplineAlgorithm::splineHelperFunction( double base, double argument, int power ) const
 {
-	Globals::AlgorithmFlags flags = AlgorithmBase::flags();
-	return flags;
+	double valueToRaiseToPower = ( base - argument ) > 0 ? ( base - argument ) : 0;
+	return qPow( valueToRaiseToPower, power );
 }
 
-Q_EXPORT_PLUGIN2( polynomialalgorithm, PolynomialAlgorithm );
+Globals::AlgorithmFlags SplineAlgorithm::flags() const
+{
+	Globals::AlgorithmFlags flags = AlgorithmBase::flags();
+	return flags | Globals::ALGO_FLAG_KNOT_PICKER;
+}
+
+Q_EXPORT_PLUGIN2( splinealgorithm, SplineAlgorithm );

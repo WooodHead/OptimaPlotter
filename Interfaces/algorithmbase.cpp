@@ -1,7 +1,9 @@
 #include "stdafx.h"
 #include "algorithmbase.h"
+#include "globals.h"
 
 #include <qtranslator.h>
+#include <qapplication.h>
 
 AlgorithmBase::AlgorithmBase( QObject* parent ) : QObject( parent ), IAlgorithm()
 {
@@ -35,7 +37,35 @@ void AlgorithmBase::initWithMarkers( const QVector<QPointF>& points )
 	m_markers = points;
 }
 
+void AlgorithmBase::initWithKnots( const QVector<double>& knots )
+{
+	m_knots = knots;
+}
+
 void AlgorithmBase::output( QVector<QPointF>& points ) const
 {
 	points = m_samples;
+}
+
+void AlgorithmBase::applyLanguage( int language )
+{
+	switch( language )
+	{
+	case ( int )Globals::LANG_EN:
+		{
+			QApplication::removeTranslator( m_translator );
+			break;
+		}
+	default:
+		{
+			m_translator->load( translatorPath( language ) );
+			QApplication::installTranslator( m_translator );
+			break;
+		}
+	}
+}
+
+Globals::AlgorithmFlags AlgorithmBase::flags() const
+{
+	return Globals::ALGO_FLAG_POINT_PICKER;
 }

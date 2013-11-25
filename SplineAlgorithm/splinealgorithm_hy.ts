@@ -4,9 +4,8 @@
 <context>
     <name>PolynomialAlgorithm</name>
     <message>
-        <location filename="polynomialalgorithm.cpp" line="117"/>
         <source>Polynomial</source>
-        <translation>Բազմանդամային</translation>
+        <translation type="obsolete">Բազմանդամային</translation>
     </message>
 </context>
 <context>
@@ -16,8 +15,9 @@
         <translation type="obsolete">Բազմանդամային</translation>
     </message>
     <message>
+        <location filename="splinealgorithm.cpp" line="117"/>
         <source>Spline</source>
-        <translation type="obsolete">Սպլայն</translation>
+        <translation>Սպլայն</translation>
     </message>
 </context>
 </TS>

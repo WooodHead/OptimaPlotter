@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/splinealgorithm">
+        <file>splinealgorithm_hy.qm</file>
+    </qresource>
+</RCC>
