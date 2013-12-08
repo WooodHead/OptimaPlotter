@@ -25,8 +25,12 @@ QWT/src/debug/*
 !QWT/examples/
 QWT/examples/*
 !QWT/examples/event_filter/
+
 QWT/examples/event_filter/[Dd]ebug/*
 QWT/examples/event_filter/[Rr]elease/*
+
+QWT/examples/event_filter/event_filter/[Dd]ebug/*
+QWT/examples/event_filter/event_filter/[Rr]elease/*
 
 */[Dd]ebug/*
 */[Rr]elease/*
