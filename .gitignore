@@ -20,11 +20,13 @@ Eigen/*
 !Eigen/Eigen/
 QWT/*
 !QWT/src/
-QWT/src/release
+QWT/src/release/*
+QWT/src/debug/*
 !QWT/examples/
 QWT/examples/*
 !QWT/examples/event_filter/
-
+QWT/examples/event_filter/[Dd]ebug/*
+QWT/examples/event_filter/[Rr]elease/*
 
 */[Dd]ebug/*
 */[Rr]elease/*
