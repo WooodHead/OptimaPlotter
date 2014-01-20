@@ -5,6 +5,7 @@
 #include "ialgorithm.h"
 #include "globals.h"
 #include "knotpicker.h"
+#include "canvaspicker.h"
 
 #include <qdebug.h>
 #include <qpen.h>
@@ -141,10 +142,12 @@ void OptimaPlotter::initPlotWidget()
 {
 	m_plotWidget = new PlotWidget( this );
 
-	// KnotPicker is not inited in PlotWidget constructor, because it requires
+	// KnotPicker and CanvasPicker are not inited in PlotWidget constructor, because they require
 	// QwtPlot as a parent and the PlotWidget is inherited from the QwtPlot class.
 	KnotPicker* knotPicker = new KnotPicker( m_plotWidget );
+	CanvasPicker* canvasPicker = new CanvasPicker( m_plotWidget );
 	m_plotWidget->setKnotPicker( knotPicker );
+	m_plotWidget->setCanvasPicker( canvasPicker );
 
 	setCentralWidget( m_plotWidget );
 }

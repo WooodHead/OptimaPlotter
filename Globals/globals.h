@@ -25,6 +25,8 @@ namespace Globals
 	 {
 		 Rtti_PlotKnot = 1001
 	 };
+
+	 const int SELECTION_PIXEL_TOLERANCE = 10;
 }
 
 #endif // GLOBALS_H

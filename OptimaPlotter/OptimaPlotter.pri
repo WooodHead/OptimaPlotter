@@ -7,15 +7,10 @@ HEADERS += ./GeneratedFiles/ui_optimaplotter.h \
     ./plotmagnifier.h \
     ./settingsdialog.h \
     ./knotpicker.h \
-    ./knotitem.h
-SOURCES += ./GeneratedFiles/Debug/moc_knotpicker.cpp \
-    ./GeneratedFiles/Debug/moc_optimaplotter.cpp \
-    ./GeneratedFiles/Debug/moc_plotmagnifier.cpp \
-    ./GeneratedFiles/Debug/moc_plotpanner.cpp \
-    ./GeneratedFiles/Debug/moc_plotwidget.cpp \
-    ./GeneratedFiles/Debug/moc_settingsdialog.cpp \
-    ./GeneratedFiles/qrc_optimaplotter.cpp \
-    ./knotitem.cpp \
+    ./knotitem.h \
+    ./markerpickerclickpointmachine.h \
+    ./canvaspicker.h
+SOURCES += ./knotitem.cpp \
     ./knotpicker.cpp \
     ./main.cpp \
     ./optimaplotter.cpp \
@@ -23,6 +18,8 @@ SOURCES += ./GeneratedFiles/Debug/moc_knotpicker.cpp \
     ./plotpanner.cpp \
     ./plotwidget.cpp \
     ./settingsdialog.cpp \
+    ./markerpickerclickpointmachine.cpp \
+    ./canvaspicker.cpp \
     ./stdafx.cpp
 FORMS += ./optimaplotter.ui \
     ./settingsdialog.ui

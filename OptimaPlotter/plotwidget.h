@@ -8,7 +8,8 @@
 
 class QwtPlotPicker;
 class KnotPicker;
-class QwtPickerClickPointMachine;
+class CanvasPicker;
+class MarkerPickerClickPointMachine;
 class PlotPanner;
 class PlotMagnifier;
 class QwtPlotCurve;
@@ -32,6 +33,7 @@ public:
 	bool isKnotPickerEnabled() const;
 
 	void setKnotPicker( KnotPicker* knotPicker );
+	void setCanvasPicker( CanvasPicker* canvasPicker );
 	void setCurveSamples( const QVector<QPointF>& samples );
 	void setKnotsEnabled( bool enabled = true );
 
@@ -52,11 +54,12 @@ signals:
 private:
 	QwtPlotCurve* m_plotCurve;
 	QwtPlotPicker* m_plotPicker;
-	QwtPickerClickPointMachine* m_pickerClickPointMachine;
+	MarkerPickerClickPointMachine* m_markerPickerClickPointMachine;
 	PlotPanner* m_plotPanner;
 	PlotMagnifier* m_plotMagnifier;
 	QwtPlotGrid* m_plotGrid;
 	KnotPicker* m_knotPicker;
+	CanvasPicker* m_canvasPicker;
 };
 
 #endif //PLOTWIDGET_H

@@ -3,7 +3,9 @@
 #include "plotpanner.h"
 #include "plotmagnifier.h"
 #include "knotpicker.h"
+#include "canvaspicker.h"
 #include "knotitem.h"
+#include "markerpickerclickpointmachine.h"
 #include "globals.h"
 
 #include "qwt_plot_curve.h"
@@ -24,13 +26,14 @@ PlotWidget::PlotWidget( QWidget* parent ): QwtPlot( parent )
 {
 	//setTitle( tr( "Function plot" ) );
 
-	m_pickerClickPointMachine = new QwtPickerClickPointMachine();
+	m_markerPickerClickPointMachine = new MarkerPickerClickPointMachine();
 	m_plotPicker = new QwtPlotPicker( QwtPlot::xBottom, QwtPlot::yLeft,
 		QwtPicker::CrossRubberBand, QwtPicker::AlwaysOn, canvas() );
-	m_plotPicker->setStateMachine( m_pickerClickPointMachine );
+	m_plotPicker->setStateMachine( m_markerPickerClickPointMachine );
 
 	m_plotPanner = new PlotPanner( canvas() );
 	m_plotMagnifier = new PlotMagnifier( canvas() );
+	m_canvasPicker = 0;
 	m_knotPicker = 0;
 
 	m_plotCurve = new QwtPlotCurve();
@@ -91,6 +94,14 @@ void PlotWidget::setKnotPicker( KnotPicker* knotPicker )
 		
 		connect( m_knotPicker, SIGNAL( clicked( double ) ),
 			this, SIGNAL( knotPicked( double ) ) );
+	}
+}
+
+void PlotWidget::setCanvasPicker( CanvasPicker* canvasPicker )
+{
+	if( m_canvasPicker == 0 && canvasPicker != 0 )
+	{
+		m_canvasPicker = canvasPicker;
 	}
 }
 
