@@ -5,6 +5,7 @@
 #include "knotpicker.h"
 #include "canvaspicker.h"
 #include "knotitem.h"
+#include "markeritem.h"
 #include "markerpickerclickpointmachine.h"
 #include "globals.h"
 
@@ -14,7 +15,6 @@
 #include "qwt_plot_picker.h"
 #include "qwt_picker_machine.h"
 #include "qwt_plot_curve.h"
-#include "qwt_plot_marker.h"
 #include "qwt_symbol.h"
 #include "qwt_plot_grid.h"
 
@@ -30,9 +30,14 @@ PlotWidget::PlotWidget( QWidget* parent ): QwtPlot( parent )
 	m_plotPicker = new QwtPlotPicker( QwtPlot::xBottom, QwtPlot::yLeft,
 		QwtPicker::CrossRubberBand, QwtPicker::AlwaysOn, canvas() );
 	m_plotPicker->setStateMachine( m_markerPickerClickPointMachine );
+	m_plotPicker->setEnabled( false );
 
 	m_plotPanner = new PlotPanner( canvas() );
+	m_plotPanner->setEnabled( false );
+
 	m_plotMagnifier = new PlotMagnifier( canvas() );
+	m_plotMagnifier->setEnabled( false );
+
 	m_canvasPicker = 0;
 	m_knotPicker = 0;
 
@@ -91,6 +96,7 @@ void PlotWidget::setKnotPicker( KnotPicker* knotPicker )
 	if( m_knotPicker == 0 && knotPicker != 0 )
 	{
 		m_knotPicker = knotPicker;
+		m_knotPicker->setEnabled( false );
 		
 		connect( m_knotPicker, SIGNAL( clicked( double ) ),
 			this, SIGNAL( knotPicked( double ) ) );
@@ -102,6 +108,10 @@ void PlotWidget::setCanvasPicker( CanvasPicker* canvasPicker )
 	if( m_canvasPicker == 0 && canvasPicker != 0 )
 	{
 		m_canvasPicker = canvasPicker;
+		m_canvasPicker->setEnabled( false );
+
+		connect( m_canvasPicker, SIGNAL( picked( Qt::KeyboardModifiers, QwtPlotItem* ) ),
+			this, SLOT( onPicked( Qt::KeyboardModifiers, QwtPlotItem* ) ) );
 	}
 }
 
@@ -113,6 +123,16 @@ void PlotWidget::setKnotPickerEnabled( bool enabled )
 bool PlotWidget::isKnotPickerEnabled() const
 {
 	return m_knotPicker->isEnabled();
+}
+
+void PlotWidget::setCanvasPickerEnabled( bool enabled )
+{
+	m_canvasPicker->setEnabled( enabled );
+}
+
+bool PlotWidget::isCanvasPickerEnabled() const
+{
+	return m_canvasPicker->isEnabled();
 }
 
 void PlotWidget::setKnotsEnabled( bool enabled )
@@ -136,9 +156,9 @@ void PlotWidget::insertMarker( const QPointF& point )
 	const QwtPlotItemList& plotItemList = this->itemList();
 	for ( QwtPlotItemIterator it = plotItemList.begin(); it != plotItemList.end(); ++it )
 	{
-		if( (*it)->rtti() == QwtPlotItem::Rtti_PlotMarker )
+		if( (*it)->rtti() == Globals::Rtti_PlotMarker )
 		{
-			const QwtPlotMarker* plotMarker = dynamic_cast<const QwtPlotMarker*>( *it );
+			const MarkerItem* plotMarker = dynamic_cast<const MarkerItem*>( *it );
 			if( plotMarker->value() == point )
 			{
 				return;
@@ -146,8 +166,7 @@ void PlotWidget::insertMarker( const QPointF& point )
 		}
 	}
 
-	QwtPlotMarker* plotMarker = new QwtPlotMarker();
-	plotMarker->setSymbol( new QwtSymbol( QwtSymbol::XCross, Qt::red, QPen( Qt::red, 2.0 ), QSize( 10, 10 ) ) );
+	MarkerItem* plotMarker = new MarkerItem();
 	plotMarker->setValue( point );
 	plotMarker->attach( this );
 }
@@ -169,10 +188,10 @@ void PlotWidget::insertKnot( double coordinate )
 
 void PlotWidget::markerPointsVector( QVector<QPointF>& points ) const
 {
-	const QwtPlotItemList& plotItemList = this->itemList( QwtPlotItem::Rtti_PlotMarker );
+	const QwtPlotItemList& plotItemList = this->itemList( Globals::Rtti_PlotMarker );
 	for ( QwtPlotItemIterator it = plotItemList.begin(); it != plotItemList.end(); ++it )
 	{
-		const QwtPlotMarker* plotMarker = dynamic_cast<const QwtPlotMarker*>( *it );
+		const MarkerItem* plotMarker = dynamic_cast<const MarkerItem*>( *it );
 		points.append( plotMarker->value() );
 	}
 }
@@ -202,7 +221,7 @@ void PlotWidget::reset()
 		int type = (*it)->rtti();
 		switch( type )
 		{
-		case QwtPlotItem::Rtti_PlotMarker:
+		case Globals::Rtti_PlotMarker:
 		case Globals::Rtti_PlotKnot:
 			{
 				itemsToDetachAndDelete.append( *it );
@@ -229,4 +248,85 @@ void PlotWidget::reset()
 	}
 
 	replot();
+}
+
+void PlotWidget::onPicked( Qt::KeyboardModifiers modifiers, QwtPlotItem* plotItem )
+{
+	if( plotItem == 0 )
+	{
+		foreach( KnotItem* knotItem, m_listOfSelectedKnots )
+		{
+			knotItem->deselect();
+		}
+		m_listOfSelectedKnots.clear();
+
+		foreach( MarkerItem* markerItem, m_listOfSelectedMarkers )
+		{
+			markerItem->deselect();
+		}
+		m_listOfSelectedMarkers.clear();
+
+		return;
+	}
+
+	if( modifiers & Qt::ControlModifier )
+	{
+		switch( plotItem->rtti() )
+		{
+		case Globals::Rtti_PlotKnot:
+			{
+				KnotItem* knotItem = dynamic_cast<KnotItem*>( plotItem );
+				knotItem->setSelectionState( !knotItem->isSelected() );
+
+				knotItem->isSelected() ? m_listOfSelectedKnots.append( knotItem ) 
+					: m_listOfSelectedKnots.removeAll( knotItem );
+				break;
+			}
+		case Globals::Rtti_PlotMarker:
+			{
+				MarkerItem* markerItem = dynamic_cast<MarkerItem*>( plotItem );
+				markerItem->setSelectionState( !markerItem->isSelected() );
+
+				markerItem->isSelected() ? m_listOfSelectedMarkers.append( markerItem ) 
+					: m_listOfSelectedMarkers.removeAll( markerItem );
+				break;
+			}
+		default:
+			break;
+		}
+	}
+	else
+	{
+		switch( plotItem->rtti() )
+		{
+		case Globals::Rtti_PlotKnot:
+			{
+				foreach( KnotItem* knotItem, m_listOfSelectedKnots )
+				{
+					knotItem->deselect();
+				}
+
+				m_listOfSelectedKnots.clear();
+				KnotItem* knotItem = dynamic_cast<KnotItem*>( plotItem );
+				knotItem->select();
+				m_listOfSelectedKnots.append( knotItem );
+				break;
+			}
+		case Globals::Rtti_PlotMarker:
+			{
+				foreach( MarkerItem* markerItem, m_listOfSelectedMarkers )
+				{
+					markerItem->deselect();
+				}
+
+				m_listOfSelectedMarkers.clear();
+				MarkerItem* markerItem = dynamic_cast<MarkerItem*>( plotItem );
+				markerItem->select();
+				m_listOfSelectedMarkers.append( markerItem );
+				break;
+			}
+		default:
+			break;
+		}
+	}
 }

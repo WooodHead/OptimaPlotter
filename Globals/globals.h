@@ -23,7 +23,8 @@ namespace Globals
 
 	 enum QWT_USER_ITEMS
 	 {
-		 Rtti_PlotKnot = 1001
+		 Rtti_PlotKnot = 1001,
+		 Rtti_PlotMarker = 1002
 	 };
 
 	 const int SELECTION_PIXEL_TOLERANCE = 10;

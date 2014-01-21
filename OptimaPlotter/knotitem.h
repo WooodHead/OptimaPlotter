@@ -1,6 +1,8 @@
 #ifndef KNOTITEM_H
 #define KNOTITEM_H
 
+#include "selectable.h"
+
 #include "qwt_global.h"
 #include "qwt_plot_item.h"
 #include "qwt_scale_map.h"
@@ -8,7 +10,7 @@
 
 class QPainter;
 
-class KnotItem: public QwtPlotItem
+class KnotItem: public QwtPlotItem, public Selectable
 {
 public:
 	KnotItem();
@@ -23,6 +25,9 @@ public:
 
 	void setEnabled( bool enabled = true );
 	bool isEnabled() const;
+
+	virtual void select();
+	virtual void deselect();
 
 private:
 	QwtScaleDiv m_xScaleDiv;

@@ -3,11 +3,12 @@
 #include "globals.h"
 
 #include "qwt_painter.h"
+#include "qwt_plot.h"
 
 #include <qpainter.h>
 #include <qpen.h>
 
-KnotItem::KnotItem() : QwtPlotItem( QwtText( "Knot" ) ), m_isEnabled( true )
+KnotItem::KnotItem() : QwtPlotItem( QwtText( "Knot" ) ), Selectable(), m_isEnabled( true )
 {
     setItemInterest( QwtPlotItem::ScaleInterest, true );
     setZ( 10.0 ); //TODO: do we really need this?
@@ -36,8 +37,8 @@ void KnotItem::draw( QPainter* p, const QwtScaleMap& xMap, const QwtScaleMap& yM
 		double y2 = rect.bottom() - 1.0;
 
 		QPen pen;
-		pen.setColor( Qt::darkCyan );
-		pen.setWidth( 2.0 );
+		pen.setColor( isSelected() ? Qt::black : Qt::darkCyan );
+		pen.setWidth( isSelected() ? 3.0 : 2.0 );
 		p->setPen( pen );
 
 		QwtPainter::drawLine( p, value, y1, value, y2 );
@@ -68,4 +69,22 @@ void KnotItem::setEnabled( bool enabled )
 bool KnotItem::isEnabled() const
 {
 	return m_isEnabled;
+}
+
+void KnotItem::select()
+{
+	if( !isSelected() )
+	{
+		Selectable::select();
+		plot()->replot();
+	}
+}
+
+void KnotItem::deselect()
+{
+	if( isSelected() )
+	{
+		Selectable::deselect();
+		plot()->replot();
+	}
 }

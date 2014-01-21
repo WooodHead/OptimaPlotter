@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "canvaspicker.h"
 #include "knotitem.h"
+#include "markeritem.h"
 #include "globals.h"
 
 #include "qapplication.h"
@@ -17,10 +18,11 @@
 #include "qwt_math.h"
 
 
-CanvasPicker::CanvasPicker( QwtPlot* plot ): QObject( plot )
+CanvasPicker::CanvasPicker( QwtPlot* plot ): QObject( plot ), m_isEnabled( false )
 {
     QwtPlotCanvas* canvas = qobject_cast<QwtPlotCanvas*>( plot->canvas() );
     canvas->installEventFilter( this );
+	m_isEnabled = true;
 
 	m_selectedMarker = 0;
 	m_selectedKnot = 0;
@@ -28,6 +30,24 @@ CanvasPicker::CanvasPicker( QwtPlot* plot ): QObject( plot )
     canvas->setFocusPolicy( Qt::StrongFocus );
     canvas->setFocusIndicator( QwtPlotCanvas::ItemFocusIndicator );
     canvas->setFocus();
+}
+
+void CanvasPicker::setEnabled( bool enabled )
+{
+	if( m_isEnabled != enabled )
+	{
+		QwtPlotCanvas* canvas = qobject_cast<QwtPlotCanvas*>( plot()->canvas() );
+		m_isEnabled = enabled;
+		if( enabled )
+			canvas->installEventFilter( this );
+		else
+			canvas->removeEventFilter( this );
+	}
+}
+
+bool CanvasPicker::isEnabled() const
+{
+	return m_isEnabled;
 }
 
 bool CanvasPicker::event( QEvent *ev )
@@ -67,7 +87,7 @@ bool CanvasPicker::eventFilter( QObject *object, QEvent *event )
 			{
 				const QMouseEvent* mouseEvent = static_cast<QMouseEvent*>( event );
 				if( mouseEvent->button() == Qt::LeftButton )
-					select( mouseEvent->pos() );
+					select( mouseEvent->pos(), mouseEvent->modifiers() );
 				return true;
 			}
 		case QEvent::MouseMove:
@@ -93,14 +113,14 @@ bool CanvasPicker::eventFilter( QObject *object, QEvent *event )
     return QObject::eventFilter( object, event );
 }
 
-void CanvasPicker::select( const QPoint &pos )
+void CanvasPicker::select( const QPoint &pos, Qt::KeyboardModifiers modifiers )
 {
 	m_selectedMarker = 0;
 	m_selectedKnot = 0;
 
     double minDistanceMarkers = 10e10;
 	double minDistanceKnots = 10e10;
-	QwtPlotMarker* markerWithMinDistance = 0;
+	MarkerItem* markerWithMinDistance = 0;
 	KnotItem* knotWithMinDistance = 0;
     //int index = -1;
 
@@ -110,9 +130,9 @@ void CanvasPicker::select( const QPoint &pos )
     const QwtPlotItemList& itemList = plot()->itemList();
     for ( QwtPlotItemIterator it = itemList.begin(); it != itemList.end(); ++it )
     {
-        if ( ( *it )->rtti() == QwtPlotItem::Rtti_PlotMarker )
+        if ( ( *it )->rtti() == Globals::Rtti_PlotMarker )
         {
-            QwtPlotMarker* marker = static_cast<QwtPlotMarker*>( *it );
+            MarkerItem* marker = static_cast<MarkerItem*>( *it );
 
 			const double deltaX = xMap.transform( marker->xValue() ) - pos.x();
 			const double deltaY = yMap.transform( marker->yValue() ) - pos.y();
@@ -141,11 +161,18 @@ void CanvasPicker::select( const QPoint &pos )
 	if( minDistanceMarkers < Globals::SELECTION_PIXEL_TOLERANCE && markerWithMinDistance != 0 )
 	{
 		m_selectedMarker = markerWithMinDistance;
+		emit picked( modifiers, m_selectedMarker );
 		return;
 	}
 
 	if( minDistanceKnots < Globals::SELECTION_PIXEL_TOLERANCE && knotWithMinDistance != 0 )
+	{
 		m_selectedKnot = knotWithMinDistance;
+		emit picked( modifiers, m_selectedKnot );
+		return;
+	}
+
+	emit picked( modifiers, 0 );
 }
 
 void CanvasPicker::move( const QPoint &pos )

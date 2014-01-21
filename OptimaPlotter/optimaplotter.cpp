@@ -48,6 +48,8 @@ OptimaPlotter::OptimaPlotter( QWidget *parent, Qt::WFlags flags )
 
 	connect( m_plotWidget, SIGNAL( pointPicked( const QPointF& ) ), this, SLOT( onPointAdded( const QPointF& ) ) );
 	connect( m_plotWidget, SIGNAL( knotPicked( double ) ), this, SLOT( onKnotAdded( double ) ) );
+
+	onPickModeActivated();
 }
 
 OptimaPlotter::~OptimaPlotter()
@@ -72,6 +74,7 @@ void OptimaPlotter::onPickModeActivated()
 	if( m_currentAlgorithm == 0 )
 		return;
 
+	m_plotWidget->setCanvasPickerEnabled( true );
 	m_plotWidget->setPickerEnabled( true );
 	m_plotWidget->setPannerEnabled( false );
 	m_plotWidget->setMagnifierEnabled( false );
@@ -85,6 +88,7 @@ void OptimaPlotter::onPanModeActivated()
 	if( m_currentAlgorithm == 0 )
 		return;
 
+	m_plotWidget->setCanvasPickerEnabled( false );
 	m_plotWidget->setPickerEnabled( false );
 	m_plotWidget->setPannerEnabled( true );
 	m_plotWidget->setMagnifierEnabled( true );
@@ -154,9 +158,9 @@ void OptimaPlotter::initPlotWidget()
 
 void OptimaPlotter::onEventLoopStarted()
 {
-	onPanModeActivated();
+	//onPanModeActivated();
 	//m_plotWidget->panToCenter();
-	onPickModeActivated();
+	//onPickModeActivated();
 }
 
 void OptimaPlotter::onReset()

@@ -5,15 +5,19 @@
 
 #include <qpoint.h>
 #include <qvector.h>
+#include <qlist.h>
 
 class QwtPlotPicker;
 class KnotPicker;
+class MarkerItem;
+class KnotItem;
 class CanvasPicker;
 class MarkerPickerClickPointMachine;
 class PlotPanner;
 class PlotMagnifier;
 class QwtPlotCurve;
 class QwtPlotGrid;
+class QwtPlotItem;
 
 class PlotWidget : public QwtPlot
 {
@@ -31,6 +35,8 @@ public:
 	bool isMagnifierEnabled() const;
 	void setKnotPickerEnabled( bool enabled );
 	bool isKnotPickerEnabled() const;
+	void setCanvasPickerEnabled( bool enabled );
+	bool isCanvasPickerEnabled() const;
 
 	void setKnotPicker( KnotPicker* knotPicker );
 	void setCanvasPicker( CanvasPicker* canvasPicker );
@@ -51,6 +57,9 @@ signals:
 	void pointPicked( const QPointF& point );
 	void knotPicked( double coordinate );
 
+private slots:
+	void onPicked( Qt::KeyboardModifiers modifiers, QwtPlotItem* plotItem );
+
 private:
 	QwtPlotCurve* m_plotCurve;
 	QwtPlotPicker* m_plotPicker;
@@ -60,6 +69,9 @@ private:
 	QwtPlotGrid* m_plotGrid;
 	KnotPicker* m_knotPicker;
 	CanvasPicker* m_canvasPicker;
+
+	QList<MarkerItem*> m_listOfSelectedMarkers;
+	QList<KnotItem*> m_listOfSelectedKnots;
 };
 
 #endif //PLOTWIDGET_H

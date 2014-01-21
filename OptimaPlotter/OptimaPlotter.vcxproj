@@ -135,11 +135,13 @@
     <ClCompile Include="knotitem.cpp" />
     <ClCompile Include="knotpicker.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="markeritem.cpp" />
     <ClCompile Include="markerpickerclickpointmachine.cpp" />
     <ClCompile Include="optimaplotter.cpp" />
     <ClCompile Include="plotmagnifier.cpp" />
     <ClCompile Include="plotpanner.cpp" />
     <ClCompile Include="plotwidget.cpp" />
+    <ClCompile Include="selectable.cpp" />
     <ClCompile Include="settingsdialog.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -235,7 +237,9 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </Command>
     </CustomBuild>
+    <ClInclude Include="markeritem.h" />
     <ClInclude Include="markerpickerclickpointmachine.h" />
+    <ClInclude Include="selectable.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
