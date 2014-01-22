@@ -9,7 +9,9 @@ HEADERS += ./GeneratedFiles/ui_optimaplotter.h \
     ./knotpicker.h \
     ./knotitem.h \
     ./markerpickerclickpointmachine.h \
-    ./canvaspicker.h
+    ./canvaspicker.h \
+    ./markeritem.h \
+    ./selectable.h
 SOURCES += ./knotitem.cpp \
     ./knotpicker.cpp \
     ./main.cpp \
@@ -20,7 +22,9 @@ SOURCES += ./knotitem.cpp \
     ./settingsdialog.cpp \
     ./markerpickerclickpointmachine.cpp \
     ./canvaspicker.cpp \
-    ./stdafx.cpp
+    ./stdafx.cpp \
+    ./markeritem.cpp \
+    ./selectable.cpp
 FORMS += ./optimaplotter.ui \
     ./settingsdialog.ui
 TRANSLATIONS += ./optimaplotter_hy.ts
