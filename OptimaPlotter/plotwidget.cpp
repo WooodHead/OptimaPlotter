@@ -247,6 +247,9 @@ void PlotWidget::reset()
 		delete item;
 	}
 
+	m_listOfSelectedMarkers.clear();
+	m_listOfSelectedKnots.clear();
+
 	replot();
 }
 
