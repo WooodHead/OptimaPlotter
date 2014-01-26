@@ -3,6 +3,7 @@
 #include "knotitem.h"
 #include "markeritem.h"
 #include "globals.h"
+#include "plotwidget.h"
 
 #include "qapplication.h"
 #include "qevent.h"
@@ -18,14 +19,12 @@
 #include "qwt_math.h"
 
 
-CanvasPicker::CanvasPicker( QwtPlot* plot ): QObject( plot ), m_isEnabled( false )
+CanvasPicker::CanvasPicker( QwtPlot* plot ): QObject( plot ), m_isEnabled( false ), m_dragAndDropInProgress( false ),
+	m_typeOfItemsToDrag( -1 ), m_itemToPick( 0 )
 {
     QwtPlotCanvas* canvas = qobject_cast<QwtPlotCanvas*>( plot->canvas() );
     canvas->installEventFilter( this );
 	m_isEnabled = true;
-
-	m_selectedMarker = 0;
-	m_selectedKnot = 0;
 
     canvas->setFocusPolicy( Qt::StrongFocus );
     canvas->setFocusIndicator( QwtPlotCanvas::ItemFocusIndicator );
@@ -98,7 +97,9 @@ bool CanvasPicker::eventFilter( QObject *object, QEvent *event )
 			}
 		case QEvent::MouseButtonRelease:
 			{
-				release();
+				const QMouseEvent* mouseEvent = static_cast<QMouseEvent*>( event );
+				if( mouseEvent->button() == Qt::LeftButton )
+					release( mouseEvent->pos(), mouseEvent->modifiers() );
 				return true;
 			}
 		case QEvent::Paint:
@@ -115,14 +116,18 @@ bool CanvasPicker::eventFilter( QObject *object, QEvent *event )
 
 void CanvasPicker::select( const QPoint &pos, Qt::KeyboardModifiers modifiers )
 {
-	m_selectedMarker = 0;
-	m_selectedKnot = 0;
+	m_selectionPoint = pos;
+	m_previousPoint = pos;
 
     double minDistanceMarkers = 10e10;
 	double minDistanceKnots = 10e10;
+
 	MarkerItem* markerWithMinDistance = 0;
 	KnotItem* knotWithMinDistance = 0;
-    //int index = -1;
+
+	int selectionType = -1;
+
+	PlotWidget* plotWidget = dynamic_cast<PlotWidget*>( plot() );
 
 	const QwtScaleMap xMap = plot()->canvasMap( QwtPlot::xBottom );
     const QwtScaleMap yMap = plot()->canvasMap( QwtPlot::yLeft );
@@ -160,35 +165,103 @@ void CanvasPicker::select( const QPoint &pos, Qt::KeyboardModifiers modifiers )
 	// Give a priority to the markers
 	if( minDistanceMarkers < Globals::SELECTION_PIXEL_TOLERANCE && markerWithMinDistance != 0 )
 	{
-		m_selectedMarker = markerWithMinDistance;
-		emit picked( modifiers, m_selectedMarker );
-		return;
+		m_itemToPick = markerWithMinDistance;
+		selectionType = Globals::Rtti_PlotMarker;
 	}
-
-	if( minDistanceKnots < Globals::SELECTION_PIXEL_TOLERANCE && knotWithMinDistance != 0 )
+	else if(  minDistanceKnots < Globals::SELECTION_PIXEL_TOLERANCE && knotWithMinDistance != 0 )
 	{
-		m_selectedKnot = knotWithMinDistance;
-		emit picked( modifiers, m_selectedKnot );
+		m_itemToPick = knotWithMinDistance;
+		selectionType = Globals::Rtti_PlotKnot;
+	}
+
+	if( selectionType == -1 )
+	{
+		emit picked( modifiers, 0 );
 		return;
 	}
 
-	emit picked( modifiers, 0 );
+	QList<QwtPlotItem*>& listOfSelectedItems = plotWidget->listOfSelectedItems( selectionType );
+
+	if( listOfSelectedItems.count() == 0 )
+	{
+		// Select and allow the user to drag and drop.
+		emit picked( modifiers, m_itemToPick );
+
+		m_typeOfItemsToDrag = selectionType;
+		m_dragAndDropInProgress = true;
+		m_itemToPick = 0;
+	}
+	else
+	{
+		if( listOfSelectedItems.contains( m_itemToPick ) )
+		{
+			// We don't know yet whether the user wants to do a selection or a drag and drop operation.
+			// The picking operation will be detected in CanvasPicker::release().
+
+			m_typeOfItemsToDrag = selectionType;
+			m_dragAndDropInProgress = true;
+		}
+		else
+		{
+			emit picked( modifiers, m_itemToPick );
+			m_itemToPick = 0;
+
+			if( listOfSelectedItems.count() == 1 )
+			{
+				m_typeOfItemsToDrag = selectionType;
+				m_dragAndDropInProgress = true;
+			}
+		}
+	}
 }
 
 void CanvasPicker::move( const QPoint &pos )
 {
-	if( !m_selectedMarker && !m_selectedKnot )
+	if( !m_dragAndDropInProgress )
 		return;
 
-	if ( m_selectedMarker )
+	PlotWidget* plotWidget = dynamic_cast<PlotWidget*>( plot() );
+
+	switch( m_typeOfItemsToDrag )
 	{
-		m_selectedMarker->setValue( plot()->invTransform( QwtPlot::xBottom, pos.x() ), 
-			plot()->invTransform( QwtPlot::yLeft, pos.y() ) );
+	case Globals::Rtti_PlotMarker:
+		{
+			const double dX = plot()->invTransform( QwtPlot::xBottom, pos.x() ) - plot()->invTransform( QwtPlot::xBottom, m_previousPoint.x() );
+			const double dY = plot()->invTransform( QwtPlot::yLeft, pos.y() ) - plot()->invTransform( QwtPlot::yLeft, m_previousPoint.y() );
+
+			QList<QwtPlotItem*>& listOfSelectedMarkers = plotWidget->listOfSelectedItems( Globals::Rtti_PlotMarker );
+
+			foreach( QwtPlotItem* item, listOfSelectedMarkers )
+			{
+				MarkerItem* markerItem = dynamic_cast<MarkerItem*>( item );
+				markerItem->setValue(  markerItem->xValue() + dX, markerItem->yValue() + dY );
+			}
+
+			break;
+		}
+	case Globals::Rtti_PlotKnot:
+		{
+			const double dX = plot()->invTransform( QwtPlot::xBottom, pos.x() ) - plot()->invTransform( QwtPlot::xBottom, m_previousPoint.x() );
+
+			QList<QwtPlotItem*>& listOfSelectedKnots = plotWidget->listOfSelectedItems( Globals::Rtti_PlotKnot );
+
+			foreach( QwtPlotItem* item, listOfSelectedKnots )
+			{
+				KnotItem* knotItem = dynamic_cast<KnotItem*>( item );
+				knotItem->setCoordinate( knotItem->coordinate() + dX );
+			}
+
+			break;
+		}
+	default:
+		{
+			m_dragAndDropInProgress = false;
+			m_typeOfItemsToDrag = -1;
+			return;
+		}
 	}
-	else if( m_selectedKnot )
-	{
-		m_selectedKnot->setCoordinate( plot()->invTransform( QwtPlot::xBottom, pos.x() ) );
-	}
+
+	m_previousPoint = pos;
 
 	QwtPlotCanvas *plotCanvas = 
 		qobject_cast<QwtPlotCanvas *>( plot()->canvas() );
@@ -198,10 +271,16 @@ void CanvasPicker::move( const QPoint &pos )
 	plotCanvas->setPaintAttribute( QwtPlotCanvas::ImmediatePaint, false );
 }
 
-void CanvasPicker::release()
+void CanvasPicker::release( const QPoint& pos, Qt::KeyboardModifiers modifiers )
 {
-	m_selectedMarker = 0;
-	m_selectedKnot = 0;
+	if( m_selectionPoint == pos && m_itemToPick != 0 )
+	{
+		emit picked( modifiers, m_itemToPick );
+	}
+
+	m_dragAndDropInProgress = false;
+	m_typeOfItemsToDrag = -1;
+	m_itemToPick = 0;
 }
 
 QwtPlot* CanvasPicker::plot()

@@ -254,14 +254,16 @@ void PlotWidget::onPicked( Qt::KeyboardModifiers modifiers, QwtPlotItem* plotIte
 {
 	if( plotItem == 0 )
 	{
-		foreach( KnotItem* knotItem, m_listOfSelectedKnots )
+		foreach( QwtPlotItem* item, m_listOfSelectedKnots )
 		{
+			KnotItem* knotItem = dynamic_cast<KnotItem*>( item );
 			knotItem->deselect();
 		}
 		m_listOfSelectedKnots.clear();
 
-		foreach( MarkerItem* markerItem, m_listOfSelectedMarkers )
+		foreach( QwtPlotItem* item, m_listOfSelectedMarkers )
 		{
+			MarkerItem* markerItem = dynamic_cast<MarkerItem*>( item );
 			markerItem->deselect();
 		}
 		m_listOfSelectedMarkers.clear();
@@ -301,8 +303,9 @@ void PlotWidget::onPicked( Qt::KeyboardModifiers modifiers, QwtPlotItem* plotIte
 		{
 		case Globals::Rtti_PlotKnot:
 			{
-				foreach( KnotItem* knotItem, m_listOfSelectedKnots )
+				foreach( QwtPlotItem* item, m_listOfSelectedKnots )
 				{
+					KnotItem* knotItem = dynamic_cast<KnotItem*>( item );
 					knotItem->deselect();
 				}
 
@@ -314,8 +317,9 @@ void PlotWidget::onPicked( Qt::KeyboardModifiers modifiers, QwtPlotItem* plotIte
 			}
 		case Globals::Rtti_PlotMarker:
 			{
-				foreach( MarkerItem* markerItem, m_listOfSelectedMarkers )
+				foreach( QwtPlotItem* item, m_listOfSelectedMarkers )
 				{
+					MarkerItem* markerItem = dynamic_cast<MarkerItem*>( item );
 					markerItem->deselect();
 				}
 
@@ -328,5 +332,20 @@ void PlotWidget::onPicked( Qt::KeyboardModifiers modifiers, QwtPlotItem* plotIte
 		default:
 			break;
 		}
+	}
+}
+
+QList<QwtPlotItem*>& PlotWidget::listOfSelectedItems( int itemType )
+{
+	static QList<QwtPlotItem*> dullList;
+
+	switch( itemType )
+	{
+	case::Globals::Rtti_PlotKnot:
+		return m_listOfSelectedKnots;
+	case::Globals::Rtti_PlotMarker:
+		return m_listOfSelectedMarkers;
+	default:
+		return dullList;
 	}
 }

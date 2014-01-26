@@ -50,8 +50,9 @@ public:
 	void knotsVector( QVector<double>& knots ) const;
 
 	void panToCenter();
-
 	void reset();
+
+	QList<QwtPlotItem*>& listOfSelectedItems( int itemType );
 
 signals:
 	void pointPicked( const QPointF& point );
@@ -70,8 +71,8 @@ private:
 	KnotPicker* m_knotPicker;
 	CanvasPicker* m_canvasPicker;
 
-	QList<MarkerItem*> m_listOfSelectedMarkers;
-	QList<KnotItem*> m_listOfSelectedKnots;
+	QList<QwtPlotItem*> m_listOfSelectedMarkers;
+	QList<QwtPlotItem*> m_listOfSelectedKnots;
 };
 
 #endif //PLOTWIDGET_H
