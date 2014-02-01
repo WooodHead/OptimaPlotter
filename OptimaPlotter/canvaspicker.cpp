@@ -235,6 +235,7 @@ void CanvasPicker::move( const QPoint &pos )
 			{
 				MarkerItem* markerItem = dynamic_cast<MarkerItem*>( item );
 				markerItem->setValue(  markerItem->xValue() + dX, markerItem->yValue() + dY );
+				emit dataChanged( markerItem );
 			}
 
 			break;
@@ -249,6 +250,7 @@ void CanvasPicker::move( const QPoint &pos )
 			{
 				KnotItem* knotItem = dynamic_cast<KnotItem*>( item );
 				knotItem->setCoordinate( knotItem->coordinate() + dX );
+				emit dataChanged( knotItem );
 			}
 
 			break;

@@ -10,7 +10,8 @@ class QSpinBox;
 class QTranslator;
 class QLabel;
 class QComboBox;
-
+class MarkerExplorer;
+class KnotExplorer;
 class OptimaPlotter : public QMainWindow
 {
 	Q_OBJECT
@@ -21,6 +22,7 @@ public:
 
 private:
 	void initPlotWidget();
+	void setupDocks();
 	void setupToolBar();
 	void setupAnimation();
 	void readSettings();
@@ -29,7 +31,6 @@ private:
 	virtual void changeEvent( QEvent* event );
 
 public slots:
-	void onReset();
 	void onEventLoopStarted();
 
 private slots:
@@ -53,6 +54,9 @@ private:
 	QTranslator* m_translator;
 	IAlgorithm* m_currentAlgorithm;
 	QList<IAlgorithm*> m_availableAlgorithms;
+	
+	MarkerExplorer* m_markerExplorer;
+	KnotExplorer* m_knotExplorer;
 };
 
 #endif //OPTIMAPLOTTER_H

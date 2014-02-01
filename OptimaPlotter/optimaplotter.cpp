@@ -6,6 +6,8 @@
 #include "globals.h"
 #include "knotpicker.h"
 #include "canvaspicker.h"
+#include "markerexplorer.h"
+#include "knotexplorer.h"
 
 #include <qdebug.h>
 #include <qpen.h>
@@ -34,6 +36,8 @@ OptimaPlotter::OptimaPlotter( QWidget *parent, Qt::WFlags flags )
 
 	onLoadPlugins();
 
+	setupDocks();
+
 	readSettings();
 	retranslateUi();
 
@@ -44,10 +48,33 @@ OptimaPlotter::OptimaPlotter( QWidget *parent, Qt::WFlags flags )
 	connect( ui.actionPan, SIGNAL( activated() ), this, SLOT( onPanModeActivated() ) );
 	connect( ui.actionExecute, SIGNAL( triggered() ), this, SLOT( onExecute() ) );
 	connect( ui.actionSettings, SIGNAL( triggered() ), this, SLOT( onExecuteSettingsDialog() ) );
-	connect( ui.actionReset, SIGNAL( triggered() ), this, SLOT( onReset() ) );
 
 	connect( m_plotWidget, SIGNAL( pointPicked( const QPointF& ) ), this, SLOT( onPointAdded( const QPointF& ) ) );
 	connect( m_plotWidget, SIGNAL( knotPicked( double ) ), this, SLOT( onKnotAdded( double ) ) );
+	
+
+	// Connections between the explorers and the plot widget.
+	connect( m_markerExplorer, SIGNAL( itemAdded( QwtPlotItem* ) ), m_plotWidget, SLOT( onItemAdded( QwtPlotItem* ) ) );
+	connect( m_knotExplorer, SIGNAL( itemAdded( QwtPlotItem* ) ), m_plotWidget, SLOT( onItemAdded( QwtPlotItem* ) ) );
+
+	connect( m_markerExplorer, SIGNAL( selectionChanged( QList<QwtPlotItem*>&, QList<QwtPlotItem*>& ) ),
+		m_plotWidget, SLOT( onSelectionChanged( QList<QwtPlotItem*>&, QList<QwtPlotItem*>& ) ) );
+	connect( m_knotExplorer, SIGNAL( selectionChanged( QList<QwtPlotItem*>&, QList<QwtPlotItem*>& ) ),
+		m_plotWidget, SLOT( onSelectionChanged( QList<QwtPlotItem*>&, QList<QwtPlotItem*>& ) ) );
+
+	connect( m_plotWidget, SIGNAL( dataChanged( QwtPlotItem* ) ), m_markerExplorer, SLOT( onDataChanged( QwtPlotItem* ) ) );
+	connect( m_plotWidget, SIGNAL( dataChanged( QwtPlotItem* ) ), m_knotExplorer, SLOT( onDataChanged( QwtPlotItem* ) ) );
+
+	connect( m_plotWidget, SIGNAL( itemAdded( QwtPlotItem* ) ), m_markerExplorer, SLOT( onItemAdded( QwtPlotItem* ) ) );
+	connect( m_plotWidget, SIGNAL( itemAdded( QwtPlotItem* ) ), m_knotExplorer, SLOT( onItemAdded( QwtPlotItem* ) ) );
+	
+	connect( m_plotWidget, SIGNAL( selectionChanged( QList<QwtPlotItem*>&, QList<QwtPlotItem*>& ) ),
+		m_markerExplorer, SLOT( onSelectionChangedFromPlotWidget( QList<QwtPlotItem*>&, QList<QwtPlotItem*>& ) ) );
+	connect( m_plotWidget, SIGNAL( selectionChanged( QList<QwtPlotItem*>&, QList<QwtPlotItem*>& ) ),
+		m_knotExplorer, SLOT( onSelectionChangedFromPlotWidget( QList<QwtPlotItem*>&, QList<QwtPlotItem*>& ) ) );
+
+	connect( m_markerExplorer, SIGNAL( deleteSelectedItems() ), m_plotWidget, SLOT( onDeleteSelectedMarkers() ) );
+	connect( m_knotExplorer, SIGNAL( deleteSelectedItems() ), m_plotWidget, SLOT( onDeleteSelectedKnots() ) );
 
 	onPickModeActivated();
 }
@@ -163,9 +190,21 @@ void OptimaPlotter::onEventLoopStarted()
 	//onPickModeActivated();
 }
 
-void OptimaPlotter::onReset()
+void OptimaPlotter::setupDocks()
 {
-	m_plotWidget->reset();
+	m_markerExplorer = new MarkerExplorer( this );
+	m_knotExplorer = new KnotExplorer( this );
+
+	ui.knotDockWidget->setWidget( m_knotExplorer );
+	ui.knotDockWidget->setWindowTitle( m_knotExplorer->name() );
+	ui.knotDockWidget->setFeatures( QDockWidget::NoDockWidgetFeatures );
+
+	ui.markerDockWidget->setWidget( m_markerExplorer );
+	ui.markerDockWidget->setWindowTitle( m_markerExplorer->name() );
+	ui.markerDockWidget->setFeatures( QDockWidget::NoDockWidgetFeatures );
+
+	if( m_currentAlgorithm != 0 )
+		ui.knotDockWidget->setVisible( m_currentAlgorithm->flags() & Globals::ALGO_FLAG_KNOT_PICKER ? true : false );
 }
 
 void OptimaPlotter::setupToolBar()
@@ -262,6 +301,9 @@ void OptimaPlotter::retranslateUi()
 	{
 		 m_algorithmSelectorComboBox->addItem( algorithm->name(), algorithm->tagName() );
 	}
+
+	ui.knotDockWidget->setWindowTitle( m_knotExplorer->name() );
+	ui.markerDockWidget->setWindowTitle( m_markerExplorer->name() );
 }
 
 void OptimaPlotter::changeEvent( QEvent* event )
@@ -306,12 +348,16 @@ void OptimaPlotter::onAlgorithmSelectorIndexChanged( int index )
 					m_plotWidget->setKnotsEnabled( true );
 					if( ui.actionPick )
 						m_plotWidget->setKnotPickerEnabled( true );
+
+					ui.knotDockWidget->setVisible( true );
 				}
 				else
 				{
 					m_plotWidget->setKnotsEnabled( false );
 					if( ui.actionPick )
 						m_plotWidget->setKnotPickerEnabled( false );
+
+					ui.knotDockWidget->setVisible( false );
 				}
 				break;
 			}

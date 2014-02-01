@@ -11,7 +11,13 @@ HEADERS += ./GeneratedFiles/ui_optimaplotter.h \
     ./markerpickerclickpointmachine.h \
     ./canvaspicker.h \
     ./markeritem.h \
-    ./selectable.h
+    ./selectable.h \
+    ./basemodel.h \
+    ./explorerbase.h \
+    ./knotexplorer.h \
+    ./knotmodel.h \
+    ./markermodel.h \
+    ./markerexplorer.h
 SOURCES += ./knotitem.cpp \
     ./knotpicker.cpp \
     ./main.cpp \
@@ -24,7 +30,13 @@ SOURCES += ./knotitem.cpp \
     ./canvaspicker.cpp \
     ./stdafx.cpp \
     ./markeritem.cpp \
-    ./selectable.cpp
+    ./selectable.cpp \
+    ./basemodel.cpp \
+    ./explorerbase.cpp \
+    ./knotexplorer.cpp \
+    ./knotmodel.cpp \
+    ./markermodel.cpp \
+    ./markerexplorer.cpp
 FORMS += ./optimaplotter.ui \
     ./settingsdialog.ui
 TRANSLATIONS += ./optimaplotter_hy.ts

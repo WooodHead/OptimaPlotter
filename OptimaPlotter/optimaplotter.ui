@@ -40,7 +40,6 @@
     <addaction name="actionPan"/>
     <addaction name="separator"/>
     <addaction name="actionExecute"/>
-    <addaction name="actionReset"/>
    </widget>
    <widget class="QMenu" name="menuOptions">
     <property name="title">
@@ -68,10 +67,21 @@
    <addaction name="actionPan"/>
    <addaction name="separator"/>
    <addaction name="actionExecute"/>
-   <addaction name="actionReset"/>
    <addaction name="separator"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QDockWidget" name="markerDockWidget">
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents"/>
+  </widget>
+  <widget class="QDockWidget" name="knotDockWidget">
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2"/>
+  </widget>
   <action name="actionPick">
    <property name="checkable">
     <bool>true</bool>
@@ -103,14 +113,6 @@
   <action name="actionExecute">
    <property name="text">
     <string>Execute</string>
-   </property>
-  </action>
-  <action name="actionReset">
-   <property name="text">
-    <string>Reset</string>
-   </property>
-   <property name="toolTip">
-    <string>Reset</string>
    </property>
   </action>
   <action name="actionSettings">

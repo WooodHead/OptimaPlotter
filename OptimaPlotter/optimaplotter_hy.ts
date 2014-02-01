@@ -2,18 +2,47 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="hy_AM">
 <context>
+    <name>ExplorerBase</name>
+    <message>
+        <location filename="explorerbase.cpp" line="27"/>
+        <source>Add</source>
+        <translation>Ավելացնել</translation>
+    </message>
+    <message>
+        <location filename="explorerbase.cpp" line="30"/>
+        <source>Delete</source>
+        <translation>Հեռացնել</translation>
+    </message>
+</context>
+<context>
+    <name>KnotExplorer</name>
+    <message>
+        <location filename="knotexplorer.cpp" line="16"/>
+        <source>Knot Explorer</source>
+        <translation>Հանգույցների զննիչ</translation>
+    </message>
+</context>
+<context>
+    <name>MarkerExplorer</name>
+    <message>
+        <location filename="markerexplorer.cpp" line="16"/>
+        <source>Marker Explorer</source>
+        <translation>Մարկերների զննիչ</translation>
+    </message>
+</context>
+<context>
     <name>OptimaPlotter</name>
     <message>
-        <location filename="optimaplotter.cpp" line="134"/>
-        <location filename="optimaplotter.cpp" line="212"/>
+        <location filename="optimaplotter.cpp" line="199"/>
+        <location filename="optimaplotter.cpp" line="277"/>
         <source>Degree:</source>
         <translation>Աստիճանը.</translation>
     </message>
     <message>
-        <location filename="optimaplotter.cpp" line="143"/>
-        <location filename="optimaplotter.cpp" line="211"/>
+        <location filename="optimaplotter.cpp" line="208"/>
+        <location filename="optimaplotter.cpp" line="276"/>
         <source>Degree</source>
-        <translation type="unfinished">Աստիճանը</translation>
+        <translation>Աստիճանը</translation>
     </message>
     <message>
         <source>Polynomial Degree</source>
@@ -41,45 +70,44 @@
         <translation>Գործիքներ</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="48"/>
+        <location filename="optimaplotter.ui" line="47"/>
         <source>Options</source>
         <translation>Ընտրանքներ</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="85"/>
+        <location filename="optimaplotter.ui" line="95"/>
         <source>Pick a point</source>
         <translation>Կետերի նշում</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="99"/>
+        <location filename="optimaplotter.ui" line="109"/>
         <source>Pan and Zoom</source>
         <translation>Տեղաշարժել/ Մեծացնել</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="102"/>
+        <location filename="optimaplotter.ui" line="112"/>
         <source>Pan and zoom the plot</source>
         <translation>Տեղաշարժել/ մեծացնել պատկերը</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="107"/>
+        <location filename="optimaplotter.ui" line="117"/>
         <source>Execute</source>
         <translation>Կատարել</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="112"/>
-        <location filename="optimaplotter.ui" line="115"/>
+        <location filename="optimaplotter.ui" line="122"/>
+        <location filename="optimaplotter.ui" line="125"/>
         <source>Reset</source>
         <translation>Մաքրել</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="120"/>
+        <location filename="optimaplotter.ui" line="130"/>
         <source>Settings</source>
         <translation>Կարգավորումներ</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="128"/>
         <source>Knot Picker</source>
-        <translation>Հիմնակետերի նշում</translation>
+        <translation type="obsolete">Հիմնակետերի նշում</translation>
     </message>
 </context>
 <context>

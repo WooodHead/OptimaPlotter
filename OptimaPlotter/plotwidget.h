@@ -50,13 +50,22 @@ public:
 	void knotsVector( QVector<double>& knots ) const;
 
 	void panToCenter();
-	void reset();
 
 	QList<QwtPlotItem*>& listOfSelectedItems( int itemType );
+
+public slots:
+	void onItemAdded( QwtPlotItem* plotItem );
+	void onSelectionChanged( QList<QwtPlotItem*>& selectedItems, QList<QwtPlotItem*>& deselectedItems );
+	void onDeleteSelectedMarkers();
+	void onDeleteSelectedKnots();
 
 signals:
 	void pointPicked( const QPointF& point );
 	void knotPicked( double coordinate );
+
+	void dataChanged( QwtPlotItem* plotItem );
+	void itemAdded( QwtPlotItem* plotItem );
+	void selectionChanged( QList<QwtPlotItem*>& selectedItems, QList<QwtPlotItem*>& deselectedItems );
 
 private slots:
 	void onPicked( Qt::KeyboardModifiers modifiers, QwtPlotItem* plotItem );

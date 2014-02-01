@@ -27,7 +27,7 @@ namespace Globals
 		 Rtti_PlotMarker = 1002
 	 };
 
-	 const int SELECTION_PIXEL_TOLERANCE = 10;
+	 const int SELECTION_PIXEL_TOLERANCE = 20;
 }
 
 #endif // GLOBALS_H

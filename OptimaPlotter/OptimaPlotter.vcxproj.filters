@@ -41,12 +41,15 @@
       <Extensions>ts</Extensions>
       <ParseFiles>false</ParseFiles>
     </Filter>
+    <Filter Include="Source Files\Plot">
+      <UniqueIdentifier>{15da40ae-6eca-49f7-a126-40ab8139c54f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Plot">
+      <UniqueIdentifier>{510bf0e6-6577-46a2-8439-c43308259c3e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="optimaplotter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_optimaplotter.cpp">
@@ -61,26 +64,17 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>STDAFX</Filter>
     </ClCompile>
-    <ClCompile Include="plotwidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_plotwidget.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_plotwidget.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="plotpanner.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_plotpanner.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_plotpanner.cpp">
       <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="plotmagnifier.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_plotmagnifier.cpp">
       <Filter>Generated Files\Debug</Filter>
@@ -97,17 +91,107 @@
     <ClCompile Include="GeneratedFiles\Release\moc_settingsdialog.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="knotpicker.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_knotpicker.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_knotpicker.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="knotitem.cpp">
+    <ClCompile Include="GeneratedFiles\Debug\moc_canvaspicker.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_canvaspicker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_canvaspicker.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_canvaspicker.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="canvaspicker.cpp">
+      <Filter>Source Files\Plot</Filter>
+    </ClCompile>
+    <ClCompile Include="knotpicker.cpp">
+      <Filter>Source Files\Plot</Filter>
+    </ClCompile>
+    <ClCompile Include="knotitem.cpp">
+      <Filter>Source Files\Plot</Filter>
+    </ClCompile>
+    <ClCompile Include="markeritem.cpp">
+      <Filter>Source Files\Plot</Filter>
+    </ClCompile>
+    <ClCompile Include="markerpickerclickpointmachine.cpp">
+      <Filter>Source Files\Plot</Filter>
+    </ClCompile>
+    <ClCompile Include="plotmagnifier.cpp">
+      <Filter>Source Files\Plot</Filter>
+    </ClCompile>
+    <ClCompile Include="plotpanner.cpp">
+      <Filter>Source Files\Plot</Filter>
+    </ClCompile>
+    <ClCompile Include="plotwidget.cpp">
+      <Filter>Source Files\Plot</Filter>
+    </ClCompile>
+    <ClCompile Include="selectable.cpp">
+      <Filter>Source Files\Plot</Filter>
+    </ClCompile>
+    <ClCompile Include="explorerbase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="optimaplotter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="markerexplorer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="knotexplorer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_knotexplorer.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_knotexplorer.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_markerexplorer.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_markerexplorer.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_explorerbase.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_explorerbase.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="markermodel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="basemodel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_basemodel.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_basemodel.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_markermodel.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_markermodel.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="knotmodel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_knotmodel.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_knotmodel.cpp">
+      <Filter>Generated Files\Release</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -120,25 +204,19 @@
     <ClInclude Include="GeneratedFiles\ui_settingsdialog.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="markerpickerclickpointmachine.h">
+      <Filter>Header Files\Plot</Filter>
+    </ClInclude>
+    <ClInclude Include="selectable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="optimaplotter.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="optimaplotter.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="optimaplotter.qrc">
       <Filter>Resource Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="plotwidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="plotpanner.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="plotmagnifier.h">
-      <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="settingsdialog.ui">
       <Filter>Form Files</Filter>
@@ -146,10 +224,46 @@
     <CustomBuild Include="settingsdialog.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="knotpicker.h">
-      <Filter>Header Files</Filter>
+    <CustomBuild Include="canvaspicker.h">
+      <Filter>Header Files\Plot</Filter>
     </CustomBuild>
     <CustomBuild Include="knotitem.h">
+      <Filter>Header Files\Plot</Filter>
+    </CustomBuild>
+    <CustomBuild Include="knotpicker.h">
+      <Filter>Header Files\Plot</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plotmagnifier.h">
+      <Filter>Header Files\Plot</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plotpanner.h">
+      <Filter>Header Files\Plot</Filter>
+    </CustomBuild>
+    <CustomBuild Include="plotwidget.h">
+      <Filter>Header Files\Plot</Filter>
+    </CustomBuild>
+    <CustomBuild Include="optimaplotter.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="knotexplorer.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="markerexplorer.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="basemodel.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="markermodel.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="markeritem.h">
+      <Filter>Header Files\Plot</Filter>
+    </CustomBuild>
+    <CustomBuild Include="knotmodel.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="explorerbase.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

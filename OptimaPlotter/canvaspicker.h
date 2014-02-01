@@ -32,7 +32,8 @@ private:
     const QwtPlot* plot() const;
 
 signals:
-	void picked( Qt::KeyboardModifiers modifiers, QwtPlotItem* item );
+	void picked( Qt::KeyboardModifiers modifiers, QwtPlotItem* plotItem );
+	void dataChanged( QwtPlotItem* plotItem );
 
 private:
 	bool m_isEnabled;
