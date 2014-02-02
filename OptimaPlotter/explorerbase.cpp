@@ -3,6 +3,8 @@
 #include "basemodel.h"
 #include "globals.h"
 
+#include "doublepropertydelegate.h"
+
 #include <qtoolbar.h>
 #include <qboxlayout.h>
 #include <qaction.h>
@@ -13,6 +15,9 @@ ExplorerBase::ExplorerBase( QWidget* parent ) : QWidget( parent ), m_model( 0 )
 {
 	m_treeView = new QTreeView( this );
 	m_treeView->setSelectionMode( QAbstractItemView::ExtendedSelection );
+
+	DoublePropertyDelegate* doublePropertyDelegate = new DoublePropertyDelegate( m_treeView );
+	m_treeView->setItemDelegate( doublePropertyDelegate );
 
 	setupUi();
 }

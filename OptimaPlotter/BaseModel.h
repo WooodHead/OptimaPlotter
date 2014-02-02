@@ -18,6 +18,7 @@ public:
 	virtual int	rowCount( const QModelIndex& parent = QModelIndex() ) const;
 	virtual bool hasChildren( const QModelIndex& parent = QModelIndex() ) const;
 	void removeItemByIndex( const QModelIndex& index );
+	virtual Qt::ItemFlags flags ( const QModelIndex& index ) const;
 
 	void emitDataChangedForItem( QwtPlotItem* plotItem );
 

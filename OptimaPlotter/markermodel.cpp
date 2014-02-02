@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "markermodel.h"
 
+#include "qwt_plot.h"
+
 #include <qpoint.h>
 
 MarkerModel::MarkerModel( QObject* parent ) : BaseModel( parent )
@@ -70,4 +72,40 @@ void MarkerModel::onAddNewMarker( MarkerItem* markerItem, bool emitMarkerAdded )
 
 	if( emitMarkerAdded )
 		emit itemAdded( markerItem );
+}
+
+
+bool MarkerModel::setData( const QModelIndex& index, const QVariant& value, int role )
+{
+	/*if( role == Qt::EditRole )
+	{
+		MarkerItem* markerItem = itemFromIndexAs<MarkerItem>( index );
+		const int column = index.column();
+
+		bool isOk;
+		const double valueInDouble = value.toDouble( &isOk );
+
+		if( !isOk )
+			return false;
+
+		switch( column )
+		{
+		case 0:
+			{
+				markerItem->setXValue( valueInDouble );
+				markerItem->plot()->replot();
+				return true;
+			}
+		case 1:
+			{
+				markerItem->setYValue( valueInDouble );
+				markerItem->plot()->replot();
+				return true;
+			}
+		default:
+			return false;
+		}
+	}
+	*/
+	return QAbstractItemModel::setData( index, value, role );
 }

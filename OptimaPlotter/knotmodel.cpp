@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "knotmodel.h"
 
+#include "qwt_plot.h"
+
 #include <qpoint.h>
 
 KnotModel::KnotModel( QObject* parent ) : BaseModel( parent )
@@ -66,4 +68,34 @@ void KnotModel::onAddNewKnot( KnotItem* knotItem, bool emitKnotAdded )
 
 	if( emitKnotAdded )
 		emit itemAdded( knotItem );
+}
+
+
+bool KnotModel::setData( const QModelIndex& index, const QVariant& value, int role )
+{
+	/*if( role == Qt::EditRole )
+	{
+		KnotItem* knotItem = itemFromIndexAs<KnotItem>( index );
+		const int column = index.column();
+
+		bool isOk;
+		const double valueInDouble = value.toDouble( &isOk );
+
+		if( !isOk )
+			return false;
+
+		switch( column )
+		{
+		case 0:
+			{
+				knotItem->setCoordinate( valueInDouble );
+				knotItem->plot()->replot();
+				return true;
+			}
+		default:
+			return false;
+		}
+	}*/
+	
+	return QAbstractItemModel::setData( index, value, role );
 }

@@ -59,3 +59,10 @@ void BaseModel::removeItemByIndex( const QModelIndex& index )
 	m_plotItems.removeAll( plotItemToRemove );
 	endRemoveRows();
 }
+
+Qt::ItemFlags BaseModel::flags ( const QModelIndex& index ) const
+{
+	if( index.isValid() )
+		return QAbstractItemModel::flags( index ) | Qt::ItemIsEditable;
+	return QAbstractItemModel::flags( index );
+}

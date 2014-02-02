@@ -193,6 +193,15 @@
     <ClCompile Include="GeneratedFiles\Release\moc_knotmodel.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="doublepropertydelegate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_doublepropertydelegate.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_doublepropertydelegate.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_optimaplotter.h">
@@ -264,6 +273,9 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="explorerbase.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="doublepropertydelegate.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

@@ -17,7 +17,8 @@ HEADERS += ./GeneratedFiles/ui_optimaplotter.h \
     ./knotexplorer.h \
     ./knotmodel.h \
     ./markermodel.h \
-    ./markerexplorer.h
+    ./markerexplorer.h \
+    ./doublepropertydelegate.h
 SOURCES += ./knotitem.cpp \
     ./knotpicker.cpp \
     ./main.cpp \
@@ -36,7 +37,8 @@ SOURCES += ./knotitem.cpp \
     ./knotexplorer.cpp \
     ./knotmodel.cpp \
     ./markermodel.cpp \
-    ./markerexplorer.cpp
+    ./markerexplorer.cpp \
+    ./doublepropertydelegate.cpp
 FORMS += ./optimaplotter.ui \
     ./settingsdialog.ui
 TRANSLATIONS += ./optimaplotter_hy.ts
