@@ -18,7 +18,9 @@ HEADERS += ./GeneratedFiles/ui_optimaplotter.h \
     ./knotmodel.h \
     ./markermodel.h \
     ./markerexplorer.h \
-    ./doublepropertydelegate.h
+    ./doublepropertydelegate.h \
+    ./rangeexplorer.h \
+    ./rangemodel.h
 SOURCES += ./knotitem.cpp \
     ./knotpicker.cpp \
     ./main.cpp \
@@ -38,7 +40,9 @@ SOURCES += ./knotitem.cpp \
     ./knotmodel.cpp \
     ./markermodel.cpp \
     ./markerexplorer.cpp \
-    ./doublepropertydelegate.cpp
+    ./doublepropertydelegate.cpp \
+    ./rangeexplorer.cpp \
+    ./rangemodel.cpp
 FORMS += ./optimaplotter.ui \
     ./settingsdialog.ui
 TRANSLATIONS += ./optimaplotter_hy.ts
