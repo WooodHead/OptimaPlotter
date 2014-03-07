@@ -17,6 +17,7 @@
 #include "qwt_plot_curve.h"
 #include "qwt_symbol.h"
 #include "qwt_plot_grid.h"
+#include "qwt_scale_div.h"
 
 #include <limits>
 #include <qpen.h>
@@ -138,16 +139,38 @@ bool PlotWidget::isCanvasPickerEnabled() const
 	return m_canvasPicker->isEnabled();
 }
 
+void PlotWidget::setRangeEnabled( bool enabled )
+{
+	const QwtPlotItemList& knotList = itemList( Globals::Rtti_PlotKnot );
+	for ( QwtPlotItemIterator it = knotList.begin(); it != knotList.end(); ++it )
+	{
+		KnotItem* knot = dynamic_cast<KnotItem*>( *it );
+		if( knot->isRangeBorder() )
+			knot->setEnabled( enabled );
+	}
+}
+
 void PlotWidget::setKnotsEnabled( bool enabled )
 {
 	const QwtPlotItemList& knotList = itemList( Globals::Rtti_PlotKnot );
 	for ( QwtPlotItemIterator it = knotList.begin(); it != knotList.end(); ++it )
 	{
 		KnotItem* knot = dynamic_cast<KnotItem*>( *it );
-		knot->setEnabled( enabled );
+		if( !knot->isRangeBorder() )
+			knot->setEnabled( enabled );
 	}
 }
 
+void PlotWidget::setKnotsEditable( bool enabled )
+{
+	const QwtPlotItemList& knotList = itemList( Globals::Rtti_PlotKnot );
+	for ( QwtPlotItemIterator it = knotList.begin(); it != knotList.end(); ++it )
+	{
+		KnotItem* knot = dynamic_cast<KnotItem*>( *it );
+		if( !knot->isRangeBorder() )
+			knot->setEditAllowed( enabled );
+	}
+}
 
 void PlotWidget::setCurveSamples( const QVector<QPointF>& samples )
 {
@@ -209,8 +232,26 @@ void PlotWidget::knotsVector( QVector<double>& knots ) const
 	for ( QwtPlotItemIterator it = knotList.begin(); it != knotList.end(); ++it )
 	{
 		const KnotItem* knot = dynamic_cast<const KnotItem*>( *it );
-		knots.append( knot->coordinate() );
+		if( !knot->isRangeBorder() )
+			knots.append( knot->coordinate() );
 	}
+}
+
+void PlotWidget::rangeBorders( double& left, double& right ) const
+{
+	QList<double> borders;
+
+	const QwtPlotItemList& knotList = this->itemList( Globals::Rtti_PlotKnot );
+	for ( QwtPlotItemIterator it = knotList.begin(); it != knotList.end(); ++it )
+	{
+		const KnotItem* knot = dynamic_cast<const KnotItem*>( *it );
+		if( knot->isRangeBorder() )
+			borders.append( knot->coordinate() );
+	}
+
+	qSort( borders.begin(), borders.end() );
+	left = borders.first();
+	right = borders.last();
 }
 
 void PlotWidget::panToCenter()
@@ -420,14 +461,32 @@ void PlotWidget::onDeleteSelectedMarkers()
 
 void PlotWidget::onDeleteSelectedKnots()
 {
+	//Do not delete the knots of type "range border", thus keep a separate list ot them
+	QList<QwtPlotItem*> borders;
+
 	m_plotCurve->setSamples( QVector<QPointF>() );
 	foreach( QwtPlotItem* item, m_listOfSelectedKnots )
 	{
-		item->detach();
-		delete item;
+		KnotItem* knotItem = dynamic_cast<KnotItem*>( item );
+
+		if( knotItem->isRangeBorder() )
+			borders.append( knotItem );
+		else
+		{
+			knotItem->detach();
+			delete knotItem;
+		}
 	}
 
 	m_listOfSelectedKnots.clear();
+	m_listOfSelectedKnots.append( borders );
 
 	replot();
+}
+
+void PlotWidget::boundingXCoordinates( double& x1, double& x2 ) const
+{
+	QwtScaleDiv scaleDiv = axisScaleDiv( xBottom );
+	x1 = scaleDiv.lowerBound();
+	x2 = scaleDiv.upperBound();
 }

@@ -24,6 +24,9 @@ public:
 	virtual void setupUi();
 	QTreeView* treeView() const;
 
+	void deleteAllItems();
+	void allowActions( bool allow = true );
+
 	virtual BaseModel* model() const;
 
 public slots:

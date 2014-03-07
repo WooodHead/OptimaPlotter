@@ -42,9 +42,20 @@ void AlgorithmBase::initWithKnots( const QVector<double>& knots )
 	m_knots = knots;
 }
 
-void AlgorithmBase::output( QVector<QPointF>& points ) const
+void AlgorithmBase::initWithRange( double left, double right )
+{
+	m_rangeLeftBorder = left;
+	m_rangeRightBorder = right;
+}
+
+void AlgorithmBase::outputSamples( QVector<QPointF>& points ) const
 {
 	points = m_samples;
+}
+
+void AlgorithmBase::outputKnots( QVector<double>& knots ) const
+{
+	knots = m_knots;
 }
 
 void AlgorithmBase::applyLanguage( int language )
@@ -69,3 +80,4 @@ Globals::AlgorithmFlags AlgorithmBase::flags() const
 {
 	return Globals::ALGO_FLAG_POINT_PICKER;
 }
+

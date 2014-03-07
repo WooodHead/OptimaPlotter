@@ -16,6 +16,8 @@ public:
 	virtual QString name() const;
 	virtual KnotModel* model() const;
 
+	void addKnot( double coordinate, bool isKnotEditable = true );
+
 public slots:
 	void onItemAdded( QwtPlotItem* plotItem );
 	virtual void onSelectionChangedFromPlotWidget( QList<QwtPlotItem*>& selectedItems, QList<QwtPlotItem*>& deselectedItems );

@@ -12,6 +12,7 @@ class QLabel;
 class QComboBox;
 class MarkerExplorer;
 class KnotExplorer;
+class RangeExplorer;
 class OptimaPlotter : public QMainWindow
 {
 	Q_OBJECT
@@ -20,6 +21,7 @@ public:
 	OptimaPlotter(QWidget *parent = 0, Qt::WFlags flags = 0);
 	~OptimaPlotter();
 
+	const PlotWidget* plotWidget() const;
 private:
 	void initPlotWidget();
 	void setupDocks();
@@ -57,6 +59,7 @@ private:
 	
 	MarkerExplorer* m_markerExplorer;
 	KnotExplorer* m_knotExplorer;
+	RangeExplorer* m_rangeExplorer;
 };
 
 #endif //OPTIMAPLOTTER_H

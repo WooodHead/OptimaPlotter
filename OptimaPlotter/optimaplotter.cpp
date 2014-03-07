@@ -8,6 +8,7 @@
 #include "canvaspicker.h"
 #include "markerexplorer.h"
 #include "knotexplorer.h"
+#include "rangeexplorer.h"
 
 #include <qdebug.h>
 #include <qpen.h>
@@ -26,6 +27,9 @@
 OptimaPlotter::OptimaPlotter( QWidget *parent, Qt::WFlags flags )
 	: QMainWindow( parent, flags ), m_currentAlgorithm( 0 )
 {
+	m_markerExplorer = 0;
+	m_knotExplorer = 0;
+	m_rangeExplorer = 0;
 	m_translator = new QTranslator( this );
 	
 	ui.setupUi( this );
@@ -61,9 +65,12 @@ OptimaPlotter::OptimaPlotter( QWidget *parent, Qt::WFlags flags )
 		m_plotWidget, SLOT( onSelectionChanged( QList<QwtPlotItem*>&, QList<QwtPlotItem*>& ) ) );
 	connect( m_knotExplorer, SIGNAL( selectionChanged( QList<QwtPlotItem*>&, QList<QwtPlotItem*>& ) ),
 		m_plotWidget, SLOT( onSelectionChanged( QList<QwtPlotItem*>&, QList<QwtPlotItem*>& ) ) );
+	connect( m_rangeExplorer, SIGNAL( selectionChanged( QList<QwtPlotItem*>&, QList<QwtPlotItem*>& ) ),
+		m_plotWidget, SLOT( onSelectionChanged( QList<QwtPlotItem*>&, QList<QwtPlotItem*>& ) ) );
 
 	connect( m_plotWidget, SIGNAL( dataChanged( QwtPlotItem* ) ), m_markerExplorer, SLOT( onDataChanged( QwtPlotItem* ) ) );
 	connect( m_plotWidget, SIGNAL( dataChanged( QwtPlotItem* ) ), m_knotExplorer, SLOT( onDataChanged( QwtPlotItem* ) ) );
+	connect( m_plotWidget, SIGNAL( dataChanged( QwtPlotItem* ) ), m_rangeExplorer, SLOT( onDataChanged( QwtPlotItem* ) ) );
 
 	connect( m_plotWidget, SIGNAL( itemAdded( QwtPlotItem* ) ), m_markerExplorer, SLOT( onItemAdded( QwtPlotItem* ) ) );
 	connect( m_plotWidget, SIGNAL( itemAdded( QwtPlotItem* ) ), m_knotExplorer, SLOT( onItemAdded( QwtPlotItem* ) ) );
@@ -72,6 +79,8 @@ OptimaPlotter::OptimaPlotter( QWidget *parent, Qt::WFlags flags )
 		m_markerExplorer, SLOT( onSelectionChangedFromPlotWidget( QList<QwtPlotItem*>&, QList<QwtPlotItem*>& ) ) );
 	connect( m_plotWidget, SIGNAL( selectionChanged( QList<QwtPlotItem*>&, QList<QwtPlotItem*>& ) ),
 		m_knotExplorer, SLOT( onSelectionChangedFromPlotWidget( QList<QwtPlotItem*>&, QList<QwtPlotItem*>& ) ) );
+	connect( m_plotWidget, SIGNAL( selectionChanged( QList<QwtPlotItem*>&, QList<QwtPlotItem*>& ) ),
+		m_rangeExplorer, SLOT( onSelectionChangedFromPlotWidget( QList<QwtPlotItem*>&, QList<QwtPlotItem*>& ) ) );
 
 	connect( m_markerExplorer, SIGNAL( deleteSelectedItems() ), m_plotWidget, SLOT( onDeleteSelectedMarkers() ) );
 	connect( m_knotExplorer, SIGNAL( deleteSelectedItems() ), m_plotWidget, SLOT( onDeleteSelectedKnots() ) );
@@ -119,7 +128,7 @@ void OptimaPlotter::onPanModeActivated()
 	m_plotWidget->setPickerEnabled( false );
 	m_plotWidget->setPannerEnabled( true );
 	m_plotWidget->setMagnifierEnabled( true );
-
+	
 	if( m_currentAlgorithm->flags() & Globals::ALGO_FLAG_KNOT_PICKER ) 
 		m_plotWidget->setKnotPickerEnabled( false );
 }
@@ -142,6 +151,9 @@ void OptimaPlotter::onExecute()
 	if( m_currentAlgorithm == 0 )
 		return;
 
+	if( m_currentAlgorithm->flags() & Globals::ALGO_FLAG_RANGE_PICKER )
+		m_knotExplorer->deleteAllItems();
+
 	m_currentAlgorithm->setPropertyValueByTagName( "polynomial_degree", m_polynomialDegreeSpinBox->value() );
 	m_currentAlgorithm->setPropertyValueByTagName( "samples_count", 100000 );
 
@@ -162,10 +174,29 @@ void OptimaPlotter::onExecute()
 		m_currentAlgorithm->initWithKnots( knots );
 	}
 
+	if( m_currentAlgorithm->flags() & Globals::ALGO_FLAG_RANGE_PICKER )
+	{
+		double leftBorder = 0.0;
+		double rightBorder = 0.0;
+
+		m_plotWidget->rangeBorders( leftBorder, rightBorder );
+		m_currentAlgorithm->initWithRange( leftBorder, rightBorder );
+	}
+
 	m_currentAlgorithm->evaluate();
-	m_currentAlgorithm->output( samples );
+	m_currentAlgorithm->outputSamples( samples );
 
 	m_plotWidget->setCurveSamples( samples );
+
+	if( m_currentAlgorithm->flags() & Globals::ALGO_FLAG_RANGE_PICKER )
+	{
+		QVector<double> knots;
+		m_currentAlgorithm->outputKnots( knots );
+		foreach( double coordinate, knots )
+		{
+			m_knotExplorer->addKnot( coordinate, false );
+		}
+	}
 	m_plotWidget->replot();
 }
 
@@ -194,6 +225,10 @@ void OptimaPlotter::setupDocks()
 {
 	m_markerExplorer = new MarkerExplorer( this );
 	m_knotExplorer = new KnotExplorer( this );
+	m_rangeExplorer = new RangeExplorer( m_plotWidget, this );
+	
+	// This "connect" is here because we need to sync the range items and they are created upon explorer view. 
+	connect( m_rangeExplorer, SIGNAL( itemAdded( QwtPlotItem* ) ), m_plotWidget, SLOT( onItemAdded( QwtPlotItem* ) ) );
 
 	ui.knotDockWidget->setWidget( m_knotExplorer );
 	ui.knotDockWidget->setWindowTitle( m_knotExplorer->name() );
@@ -203,8 +238,16 @@ void OptimaPlotter::setupDocks()
 	ui.markerDockWidget->setWindowTitle( m_markerExplorer->name() );
 	ui.markerDockWidget->setFeatures( QDockWidget::NoDockWidgetFeatures );
 
+	ui.rangeDockWidget->setWidget( m_rangeExplorer );
+	ui.rangeDockWidget->setWindowTitle( m_rangeExplorer->name() );
+	ui.rangeDockWidget->setFeatures( QDockWidget::NoDockWidgetFeatures );
+
 	if( m_currentAlgorithm != 0 )
+	{
 		ui.knotDockWidget->setVisible( m_currentAlgorithm->flags() & Globals::ALGO_FLAG_KNOT_PICKER ? true : false );
+		m_knotExplorer->allowActions( m_currentAlgorithm->flags() &  Globals::ALGO_FLAG_KNOT_PICKER );
+		ui.rangeDockWidget->setVisible( m_currentAlgorithm->flags() & Globals::ALGO_FLAG_RANGE_PICKER ? true : false );
+	}
 }
 
 void OptimaPlotter::setupToolBar()
@@ -343,26 +386,54 @@ void OptimaPlotter::onAlgorithmSelectorIndexChanged( int index )
 			{
 				m_currentAlgorithm = algorithm;
 
-				if( m_currentAlgorithm->flags() & Globals::ALGO_FLAG_KNOT_PICKER )
+				if( m_currentAlgorithm->flags() & Globals::ALGO_FLAG_RANGE_PICKER )
+				{
+					m_plotWidget->setRangeEnabled( true );
+					if( !( m_currentAlgorithm->flags() & Globals::ALGO_FLAG_KNOT_PICKER ) )
+					{
+						m_plotWidget->setKnotsEditable( false );
+					}
+					ui.rangeDockWidget->setVisible( true );
+				}
+				else
+				{
+					m_plotWidget->setRangeEnabled( false );
+					m_plotWidget->setKnotsEditable( true );
+					ui.rangeDockWidget->setVisible( false );
+				}
+
+				if( ui.actionPick )
+				{
+					if( m_currentAlgorithm->flags() & Globals::ALGO_FLAG_KNOT_PICKER )
+						m_plotWidget->setKnotPickerEnabled( true );
+					else
+						m_plotWidget->setKnotPickerEnabled( false );
+				}
+
+				if( m_currentAlgorithm->flags() & ( Globals::ALGO_FLAG_KNOT_PICKER |
+													Globals::ALGO_FLAG_RANGE_PICKER ) )
 				{
 					m_plotWidget->setKnotsEnabled( true );
-					if( ui.actionPick )
-						m_plotWidget->setKnotPickerEnabled( true );
-
 					ui.knotDockWidget->setVisible( true );
+
+					if( m_knotExplorer )
+						m_knotExplorer->allowActions( m_currentAlgorithm->flags() &  Globals::ALGO_FLAG_KNOT_PICKER );
 				}
 				else
 				{
 					m_plotWidget->setKnotsEnabled( false );
-					if( ui.actionPick )
-						m_plotWidget->setKnotPickerEnabled( false );
-
 					ui.knotDockWidget->setVisible( false );
 				}
+
 				break;
 			}
 		}
 	}
 
 	m_plotWidget->replot();
+}
+
+const PlotWidget* OptimaPlotter::plotWidget() const
+{
+	return m_plotWidget;
 }

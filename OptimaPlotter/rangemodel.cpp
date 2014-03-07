@@ -1,25 +1,25 @@
 #include "stdafx.h"
-#include "knotmodel.h"
+#include "rangemodel.h"
 
 #include "qwt_plot.h"
 
 #include <qpoint.h>
 
-KnotModel::KnotModel( QObject* parent ) : BaseModel( parent )
+RangeModel::RangeModel( QObject* parent ) : BaseModel( parent )
 {
 }
 
-KnotModel::~KnotModel()
+RangeModel::~RangeModel()
 {
 
 }
 
-int KnotModel::columnCount( const QModelIndex& parent ) const
+int RangeModel::columnCount( const QModelIndex& parent ) const
 {
 	return 1;
 }
 
-QVariant KnotModel::data( const QModelIndex& index, int role ) const
+QVariant RangeModel::data( const QModelIndex& index, int role ) const
 {
 	if( role == Qt::DisplayRole )
 	{
@@ -45,7 +45,7 @@ QVariant KnotModel::data( const QModelIndex& index, int role ) const
 	return QVariant();
 }
 
-QVariant KnotModel::headerData( int section, Qt::Orientation orientation, int role ) const
+QVariant RangeModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
 	if( orientation == Qt::Horizontal && role == Qt::DisplayRole )
 	{
@@ -60,7 +60,7 @@ QVariant KnotModel::headerData( int section, Qt::Orientation orientation, int ro
 	return BaseModel::headerData( section, orientation, role );
 }
 
-void KnotModel::onAddNewKnot( KnotItem* knotItem, bool emitKnotAdded )
+void RangeModel::onAddNewKnot( KnotItem* knotItem, bool emitKnotAdded )
 {
 	beginInsertRows( QModelIndex(), m_plotItems.count(), m_plotItems.count() );
 	m_plotItems.append( knotItem );
@@ -71,7 +71,7 @@ void KnotModel::onAddNewKnot( KnotItem* knotItem, bool emitKnotAdded )
 }
 
 
-bool KnotModel::setData( const QModelIndex& index, const QVariant& value, int role )
+bool RangeModel::setData( const QModelIndex& index, const QVariant& value, int role )
 {
 	/*if( role == Qt::EditRole )
 	{
@@ -98,18 +98,4 @@ bool KnotModel::setData( const QModelIndex& index, const QVariant& value, int ro
 	}*/
 	
 	return QAbstractItemModel::setData( index, value, role );
-}
-
-
-Qt::ItemFlags KnotModel::flags ( const QModelIndex& index ) const
-{
-	if( index.isValid() )
-	{
-		const KnotItem* knotItem = itemFromIndexAs<KnotItem>( index );
-		if( knotItem->isEditAllowed() )
-			return QAbstractItemModel::flags( index ) | Qt::ItemIsEditable;
-		else
-			return QAbstractItemModel::flags( index );
-	}
-	return QAbstractItemModel::flags( index );
 }

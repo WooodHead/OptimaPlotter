@@ -15,7 +15,11 @@ public:
 	virtual ~IAlgorithm() {}
 	virtual void initWithMarkers( const QVector<QPointF>& points ) = 0;
 	virtual void initWithKnots( const QVector<double>& knots ) = 0;
-	virtual void output( QVector<QPointF>& points ) const = 0;
+	virtual void initWithRange( double left, double right ) = 0;
+
+	virtual void outputSamples( QVector<QPointF>& points ) const = 0;
+	virtual void outputKnots( QVector<double>& knots ) const = 0;
+
 	virtual void evaluate() = 0;
 
 	virtual QString name() const = 0;

@@ -49,6 +49,12 @@ void ExplorerBase::setupUi()
 	setLayout( verticalLayout );
 }
 
+void ExplorerBase::allowActions( bool allow )
+{
+	if( m_toolBar )
+		m_toolBar->setVisible( allow );
+}
+
 QTreeView* ExplorerBase::treeView() const
 {
 	return m_treeView;
@@ -108,6 +114,19 @@ void ExplorerBase::onSelectionChangedFromPlotWidget( QList<QwtPlotItem*>& select
 	foreach( QwtPlotItem* plotItem, deselectedItems )
 		m_treeView->selectionModel()->select( m_model->indexOfItem( plotItem ), QItemSelectionModel::Deselect | QItemSelectionModel::Rows );
 	blockSignals( false );
+}
+
+void ExplorerBase::deleteAllItems()
+{
+	QItemSelection selection;
+	QModelIndex topLeftIndex;
+	QModelIndex bottomRightIndex;
+	topLeftIndex = model()->index( 0, 0 );
+	bottomRightIndex = model()->index( model()->rowCount() - 1, model()->columnCount() - 1 );
+
+	selection.select( topLeftIndex, bottomRightIndex );
+	m_treeView->selectionModel()->select( selection, QItemSelectionModel::Select );
+	onDelete();
 }
 
 void ExplorerBase::onDelete()

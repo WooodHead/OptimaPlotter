@@ -13,7 +13,8 @@ class QPainter;
 class KnotItem: public QwtPlotItem, public Selectable
 {
 public:
-	KnotItem();
+	KnotItem( bool isRangeBorder = false );
+	KnotItem( double coordinate, bool isRangeBorder = false );
 	virtual ~KnotItem();
 
 	virtual int rtti() const;
@@ -26,6 +27,11 @@ public:
 	void setEnabled( bool enabled = true );
 	bool isEnabled() const;
 
+	void setEditAllowed( bool enabled = true );
+	bool isEditAllowed() const;
+
+	bool isRangeBorder() const;
+
 	virtual void select();
 	virtual void deselect();
 
@@ -34,6 +40,8 @@ private:
     QwtScaleDiv m_yScaleDiv;
 	double m_coordinate;
 	bool m_isEnabled;
+	bool m_isEditAllowed;
+	bool m_isRangeBorder;
 };
 
 #endif

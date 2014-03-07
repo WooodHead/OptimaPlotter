@@ -41,17 +41,23 @@ public:
 	void setKnotPicker( KnotPicker* knotPicker );
 	void setCanvasPicker( CanvasPicker* canvasPicker );
 	void setCurveSamples( const QVector<QPointF>& samples );
+
 	void setKnotsEnabled( bool enabled = true );
+	void setKnotsEditable( bool enabled = true );
+	void setRangeEnabled( bool enabled = true );
 
 	void insertKnot( double coordinate );
 	void insertMarker( const QPointF& point );
 
 	void markerPointsVector( QVector<QPointF>& points ) const;
 	void knotsVector( QVector<double>& knots ) const;
+	void rangeBorders( double& left, double& right ) const;
 
 	void panToCenter();
 
 	QList<QwtPlotItem*>& listOfSelectedItems( int itemType );
+
+	void boundingXCoordinates( double& x1, double& x2 ) const;
 
 public slots:
 	void onItemAdded( QwtPlotItem* plotItem );

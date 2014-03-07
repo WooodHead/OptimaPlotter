@@ -184,7 +184,7 @@ double SplineAlgorithm::splineHelperFunction( double base, double argument, int 
 Globals::AlgorithmFlags SplineAlgorithm::flags() const
 {
 	Globals::AlgorithmFlags flags = AlgorithmBase::flags();
-	return flags | Globals::ALGO_FLAG_KNOT_PICKER;
+	return flags | Globals::ALGO_FLAG_KNOT_PICKER;//  | Globals::ALGO_FLAG_RANGE_PICKER;
 }
 
 Q_EXPORT_PLUGIN2( splinealgorithm, SplineAlgorithm );

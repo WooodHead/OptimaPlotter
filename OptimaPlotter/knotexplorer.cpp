@@ -40,6 +40,13 @@ void KnotExplorer::onAddNewKnot()
 	model()->onAddNewKnot( new KnotItem(), true );
 }
 
+void KnotExplorer::addKnot( double coordinate, bool isKnotEditable )
+{
+	KnotItem* knotItem = new KnotItem( coordinate );
+	knotItem->setEditAllowed( isKnotEditable );
+	model()->onAddNewKnot( knotItem, true );
+}
+
 KnotModel* KnotExplorer::model() const
 {
 	return dynamic_cast<KnotModel*>( m_model );

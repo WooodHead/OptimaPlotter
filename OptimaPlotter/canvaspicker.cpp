@@ -249,8 +249,11 @@ void CanvasPicker::move( const QPoint &pos )
 			foreach( QwtPlotItem* item, listOfSelectedKnots )
 			{
 				KnotItem* knotItem = dynamic_cast<KnotItem*>( item );
-				knotItem->setCoordinate( knotItem->coordinate() + dX );
-				emit dataChanged( knotItem );
+				if( knotItem->isEditAllowed() )
+				{
+					knotItem->setCoordinate( knotItem->coordinate() + dX );
+					emit dataChanged( knotItem );
+				}
 			}
 
 			break;
