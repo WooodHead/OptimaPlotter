@@ -4,12 +4,14 @@
 <context>
     <name>ExplorerBase</name>
     <message>
-        <location filename="explorerbase.cpp" line="27"/>
+        <location filename="explorerbase.cpp" line="44"/>
+        <location filename="explorerbase.cpp" line="179"/>
         <source>Add</source>
         <translation>Ավելացնել</translation>
     </message>
     <message>
-        <location filename="explorerbase.cpp" line="30"/>
+        <location filename="explorerbase.cpp" line="47"/>
+        <location filename="explorerbase.cpp" line="180"/>
         <source>Delete</source>
         <translation>Հեռացնել</translation>
     </message>
@@ -17,7 +19,7 @@
 <context>
     <name>KnotExplorer</name>
     <message>
-        <location filename="knotexplorer.cpp" line="16"/>
+        <location filename="knotexplorer.cpp" line="28"/>
         <source>Knot Explorer</source>
         <translation>Հանգույցների զննիչ</translation>
     </message>
@@ -25,7 +27,7 @@
 <context>
     <name>MarkerExplorer</name>
     <message>
-        <location filename="markerexplorer.cpp" line="16"/>
+        <location filename="markerexplorer.cpp" line="30"/>
         <source>Marker Explorer</source>
         <translation>Մարկերների զննիչ</translation>
     </message>
@@ -33,14 +35,14 @@
 <context>
     <name>OptimaPlotter</name>
     <message>
-        <location filename="optimaplotter.cpp" line="199"/>
-        <location filename="optimaplotter.cpp" line="277"/>
+        <location filename="optimaplotter.cpp" line="260"/>
+        <location filename="optimaplotter.cpp" line="338"/>
         <source>Degree:</source>
         <translation>Աստիճանը.</translation>
     </message>
     <message>
-        <location filename="optimaplotter.cpp" line="208"/>
-        <location filename="optimaplotter.cpp" line="276"/>
+        <location filename="optimaplotter.cpp" line="269"/>
+        <location filename="optimaplotter.cpp" line="337"/>
         <source>Degree</source>
         <translation>Աստիճանը</translation>
     </message>
@@ -70,44 +72,50 @@
         <translation>Գործիքներ</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="47"/>
+        <location filename="optimaplotter.ui" line="46"/>
         <source>Options</source>
         <translation>Ընտրանքներ</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="95"/>
+        <location filename="optimaplotter.ui" line="99"/>
         <source>Pick a point</source>
         <translation>Կետերի նշում</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="109"/>
+        <location filename="optimaplotter.ui" line="113"/>
         <source>Pan and Zoom</source>
         <translation>Տեղաշարժել/ Մեծացնել</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="112"/>
+        <location filename="optimaplotter.ui" line="116"/>
         <source>Pan and zoom the plot</source>
         <translation>Տեղաշարժել/ մեծացնել պատկերը</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="117"/>
+        <location filename="optimaplotter.ui" line="121"/>
         <source>Execute</source>
         <translation>Կատարել</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="122"/>
-        <location filename="optimaplotter.ui" line="125"/>
         <source>Reset</source>
-        <translation>Մաքրել</translation>
+        <translation type="obsolete">Մաքրել</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="130"/>
+        <location filename="optimaplotter.ui" line="126"/>
         <source>Settings</source>
         <translation>Կարգավորումներ</translation>
     </message>
     <message>
         <source>Knot Picker</source>
         <translation type="obsolete">Հիմնակետերի նշում</translation>
+    </message>
+</context>
+<context>
+    <name>RangeExplorer</name>
+    <message>
+        <location filename="rangeexplorer.cpp" line="34"/>
+        <source>Range Explorer</source>
+        <translation>Միջակայքի զննիչ</translation>
     </message>
 </context>
 <context>

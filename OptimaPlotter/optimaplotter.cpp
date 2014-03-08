@@ -347,6 +347,7 @@ void OptimaPlotter::retranslateUi()
 
 	ui.knotDockWidget->setWindowTitle( m_knotExplorer->name() );
 	ui.markerDockWidget->setWindowTitle( m_markerExplorer->name() );
+	ui.rangeDockWidget->setWindowTitle( m_rangeExplorer->name() );
 }
 
 void OptimaPlotter::changeEvent( QEvent* event )
