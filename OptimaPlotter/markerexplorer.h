@@ -17,7 +17,7 @@ public:
 
 	virtual QString name() const;
 
-	virtual MarkerModel* model() const;
+	virtual MarkerModel* sourceModel() const;
 
 public slots:
 	void onItemAdded( QwtPlotItem* plotItem );

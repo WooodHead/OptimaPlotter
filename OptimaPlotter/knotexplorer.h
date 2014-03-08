@@ -14,7 +14,7 @@ public:
 	virtual ~KnotExplorer();
 
 	virtual QString name() const;
-	virtual KnotModel* model() const;
+	virtual KnotModel* sourceModel() const;
 
 	void addKnot( double coordinate, bool isKnotEditable = true );
 

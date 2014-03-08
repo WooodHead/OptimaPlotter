@@ -17,7 +17,7 @@ public:
 	void initRange();
 
 	virtual QString name() const;
-	virtual RangeModel* model() const;
+	virtual RangeModel* sourceModel() const;
 	
 protected:
 	virtual void showEvent( QShowEvent* event );

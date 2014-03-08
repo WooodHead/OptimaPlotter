@@ -3,6 +3,7 @@
 #include "knotitem.h"
 #include "markeritem.h"
 #include "basemodel.h"
+#include "sortingmodel.h"
 #include "globals.h"
 
 #include "qwt_plot.h"
@@ -33,8 +34,10 @@ QWidget* DoublePropertyDelegate::createEditor( QWidget* parent, const QStyleOpti
 void DoublePropertyDelegate::setEditorData( QWidget* editor, const QModelIndex& index ) const
 {
 	QDoubleSpinBox* spinBox = dynamic_cast<QDoubleSpinBox*>( editor );
-	const BaseModel* model = dynamic_cast<const BaseModel*>( index.model() );
-	const QwtPlotItem* plotItem = model->itemFromIndexAs<QwtPlotItem>( index );
+	const SortingModel* sortingModel = dynamic_cast<const SortingModel*>( index.model() );
+	const BaseModel* sourceModel = sortingModel->sourceModel();
+
+	const QwtPlotItem* plotItem = sortingModel->itemFromIndexAs<QwtPlotItem>( index );
 
 	switch( plotItem->rtti() )
 	{
@@ -62,8 +65,10 @@ void DoublePropertyDelegate::setEditorData( QWidget* editor, const QModelIndex& 
 void DoublePropertyDelegate::setModelData( QWidget* editor, QAbstractItemModel* model, const QModelIndex& index ) const
 {
 	QDoubleSpinBox* spinBox = dynamic_cast<QDoubleSpinBox*>( editor );
-	BaseModel* baseModel = dynamic_cast<BaseModel*>( model );
-	QwtPlotItem* plotItem = baseModel->itemFromIndexAs<QwtPlotItem>( index );
+	SortingModel* sortingModel = dynamic_cast<SortingModel*>( model );
+	BaseModel* sourceModel = sortingModel->sourceModel();
+
+	QwtPlotItem* plotItem = sortingModel->itemFromIndexAs<QwtPlotItem>( index );
 
 	switch( plotItem->rtti() )
 	{
@@ -76,6 +81,8 @@ void DoublePropertyDelegate::setModelData( QWidget* editor, QAbstractItemModel* 
 				markerItem->setYValue( spinBox->value() );
 
 			markerItem->plot()->replot();
+			sourceModel->emitDataChangedForItem( markerItem );
+
 			return;
 		}
 	case Globals::Rtti_PlotKnot:
@@ -85,6 +92,7 @@ void DoublePropertyDelegate::setModelData( QWidget* editor, QAbstractItemModel* 
 				knotItem->setCoordinate( spinBox->value() );
 
 			knotItem->plot()->replot();
+			sourceModel->emitDataChangedForItem( knotItem );
 			return;
 		}
 	default:

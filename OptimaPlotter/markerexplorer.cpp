@@ -2,6 +2,7 @@
 #include "markerexplorer.h"
 #include "markermodel.h"
 #include "markeritem.h"
+#include "sortingmodel.h"
 
 #include "globals.h"
 
@@ -10,11 +11,11 @@
 
 MarkerExplorer::MarkerExplorer( QWidget* parent ) : ExplorerBase( parent )
 {
-	m_model = new MarkerModel( this );
-	m_treeView->setModel( m_model );
+	m_sourceModel = new MarkerModel( this );
+	m_sortingModel->setSourceModel( m_sourceModel );
 	
 	connect( m_actionAdd, SIGNAL( triggered() ), this, SLOT( onAddNewMarker() ) );
-	connect( m_model, SIGNAL( itemAdded( QwtPlotItem* ) ), this, SIGNAL( itemAdded( QwtPlotItem* ) ) );
+	connect( m_sourceModel, SIGNAL( itemAdded( QwtPlotItem* ) ), this, SIGNAL( itemAdded( QwtPlotItem* ) ) );
 	connect( m_treeView->selectionModel(), SIGNAL( selectionChanged( const QItemSelection& , const QItemSelection& ) ),
 		this, SLOT( onSelectionChanged( const QItemSelection& , const QItemSelection& ) ) );
 }
@@ -33,18 +34,18 @@ void MarkerExplorer::onItemAdded( QwtPlotItem* plotItem )
 {
 	if( plotItem->rtti() == Globals::Rtti_PlotMarker )
 	{
-		model()->onAddNewMarker( dynamic_cast<MarkerItem*>( plotItem ), false );
+		sourceModel()->onAddNewMarker( dynamic_cast<MarkerItem*>( plotItem ), false );
 	}
 }
 
 void MarkerExplorer::onAddNewMarker()
 {
-	model()->onAddNewMarker( new MarkerItem(), true );
+	sourceModel()->onAddNewMarker( new MarkerItem(), true );
 }
 
-MarkerModel* MarkerExplorer::model() const
+MarkerModel* MarkerExplorer::sourceModel() const
 {
-	return dynamic_cast<MarkerModel*>( m_model );
+	return dynamic_cast<MarkerModel*>( m_sourceModel );
 }
 
 void MarkerExplorer::onSelectionChangedFromPlotWidget( QList<QwtPlotItem*>& selectedItems, QList<QwtPlotItem*>& deselectedItems )

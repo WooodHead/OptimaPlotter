@@ -220,6 +220,9 @@
     <ClCompile Include="rangeexplorer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sortingmodel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_optimaplotter.h">
@@ -235,6 +238,9 @@
       <Filter>Header Files\Plot</Filter>
     </ClInclude>
     <ClInclude Include="selectable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sortingmodel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

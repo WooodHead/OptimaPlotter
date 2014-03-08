@@ -4,6 +4,7 @@
 #include "globals.h"
 #include "optimaplotter.h"
 #include "plotwidget.h"
+#include "sortingmodel.h"
 
 #include <qtreeview.h>
 #include <qaction.h>
@@ -12,11 +13,11 @@
 RangeExplorer::RangeExplorer( const PlotWidget* plotWidget, QWidget* parent ) : ExplorerBase( parent ),
 	m_plotWidget( plotWidget ), m_isDefaultRangeInited( false )
 {
-	m_model = new RangeModel( this );
-	m_treeView->setModel( m_model );
+	m_sourceModel = new RangeModel( this );
+	m_sortingModel->setSourceModel( m_sourceModel );
 	
 	//connect( m_actionAdd, SIGNAL( triggered() ), this, SLOT( onAddNewKnot() ) );
-	connect( m_model, SIGNAL( itemAdded( QwtPlotItem* ) ), this, SIGNAL( itemAdded( QwtPlotItem* ) ) );
+	connect( m_sourceModel, SIGNAL( itemAdded( QwtPlotItem* ) ), this, SIGNAL( itemAdded( QwtPlotItem* ) ) );
 	connect( m_treeView->selectionModel(), SIGNAL( selectionChanged( const QItemSelection& , const QItemSelection& ) ),
 		this, SLOT( onSelectionChanged( const QItemSelection& , const QItemSelection& ) ) );
 
@@ -33,9 +34,9 @@ QString RangeExplorer::name() const
 	return tr( "Range Explorer" );
 }
 
-RangeModel* RangeExplorer::model() const
+RangeModel* RangeExplorer::sourceModel() const
 {
-	return dynamic_cast<RangeModel*>( m_model );
+	return dynamic_cast<RangeModel*>( m_sourceModel );
 }
 
 void RangeExplorer::initRange()
@@ -56,11 +57,11 @@ void RangeExplorer::initRange()
 			
 			KnotItem* knotItem1 = new KnotItem( true );
 			knotItem1->setCoordinate( leftBound );
-			model()->onAddNewKnot( knotItem1 );
+			sourceModel()->onAddNewKnot( knotItem1 );
 
 			KnotItem* knotItem2 = new KnotItem( true );
 			knotItem2->setCoordinate( rightBound );
-			model()->onAddNewKnot( knotItem2 );
+			sourceModel()->onAddNewKnot( knotItem2 );
 
 			m_isDefaultRangeInited = true;
 		}

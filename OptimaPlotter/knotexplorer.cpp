@@ -2,17 +2,18 @@
 #include "knotexplorer.h"
 #include "knotmodel.h"
 #include "globals.h"
+#include "sortingmodel.h"
 
 #include <qtreeview.h>
 #include <qaction.h>
 
 KnotExplorer::KnotExplorer( QWidget* parent ) : ExplorerBase( parent )
 {
-	m_model = new KnotModel( this );
-	m_treeView->setModel( m_model );
+	m_sourceModel = new KnotModel( this );
+	m_sortingModel->setSourceModel( m_sourceModel );
 	
 	connect( m_actionAdd, SIGNAL( triggered() ), this, SLOT( onAddNewKnot() ) );
-	connect( m_model, SIGNAL( itemAdded( QwtPlotItem* ) ), this, SIGNAL( itemAdded( QwtPlotItem* ) ) );
+	connect( m_sourceModel, SIGNAL( itemAdded( QwtPlotItem* ) ), this, SIGNAL( itemAdded( QwtPlotItem* ) ) );
 	connect( m_treeView->selectionModel(), SIGNAL( selectionChanged( const QItemSelection& , const QItemSelection& ) ),
 		this, SLOT( onSelectionChanged( const QItemSelection& , const QItemSelection& ) ) );
 }
@@ -31,25 +32,25 @@ void KnotExplorer::onItemAdded( QwtPlotItem* plotItem )
 {
 	if( plotItem->rtti() == Globals::Rtti_PlotKnot )
 	{
-		model()->onAddNewKnot( dynamic_cast<KnotItem*>( plotItem ), false );
+		sourceModel()->onAddNewKnot( dynamic_cast<KnotItem*>( plotItem ), false );
 	}
 }
 
 void KnotExplorer::onAddNewKnot()
 {
-	model()->onAddNewKnot( new KnotItem(), true );
+	sourceModel()->onAddNewKnot( new KnotItem(), true );
 }
 
 void KnotExplorer::addKnot( double coordinate, bool isKnotEditable )
 {
 	KnotItem* knotItem = new KnotItem( coordinate );
 	knotItem->setEditAllowed( isKnotEditable );
-	model()->onAddNewKnot( knotItem, true );
+	sourceModel()->onAddNewKnot( knotItem, true );
 }
 
-KnotModel* KnotExplorer::model() const
+KnotModel* KnotExplorer::sourceModel() const
 {
-	return dynamic_cast<KnotModel*>( m_model );
+	return dynamic_cast<KnotModel*>( m_sourceModel );
 }
 
 void KnotExplorer::onSelectionChangedFromPlotWidget( QList<QwtPlotItem*>& selectedItems, QList<QwtPlotItem*>& deselectedItems )

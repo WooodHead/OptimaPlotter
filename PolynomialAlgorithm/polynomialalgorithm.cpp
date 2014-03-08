@@ -110,6 +110,9 @@ void PolynomialAlgorithm::evaluate()
 		}
 		++i;
 	}
+
+	m_knots.clear();
+	m_knots << x;
 }
 
 QString PolynomialAlgorithm::name() const
@@ -138,7 +141,8 @@ QString PolynomialAlgorithm::translatorPath( int language ) const
 Globals::AlgorithmFlags PolynomialAlgorithm::flags() const
 {
 	Globals::AlgorithmFlags flags = AlgorithmBase::flags();
-	return flags;
+	//return flags;
+	return flags /*| Globals::ALGO_FLAG_KNOT_PICKER*/  | Globals::ALGO_FLAG_RANGE_PICKER;
 }
 
 Q_EXPORT_PLUGIN2( polynomialalgorithm, PolynomialAlgorithm );

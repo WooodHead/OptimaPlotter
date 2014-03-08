@@ -12,6 +12,7 @@ class BaseModel;
 class QwtPlotItem;
 class QItemSelection;
 class QEvent;
+class SortingModel;
 
 class ExplorerBase : public QWidget
 {
@@ -27,7 +28,7 @@ public:
 	void deleteAllItems();
 	void allowActions( bool allow = true );
 
-	virtual BaseModel* model() const;
+	virtual BaseModel* sourceModel() const;
 
 public slots:
 	void onDataChanged( QwtPlotItem* plotItem );
@@ -53,7 +54,8 @@ protected:
 	QAction* m_actionDelete;
 
 	QTreeView* m_treeView;
-	BaseModel* m_model;
+	SortingModel* m_sortingModel;
+	BaseModel* m_sourceModel;
 };
 
 #endif

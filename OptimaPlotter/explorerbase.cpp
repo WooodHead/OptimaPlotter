@@ -2,8 +2,8 @@
 #include "explorerbase.h"
 #include "basemodel.h"
 #include "globals.h"
-
 #include "doublepropertydelegate.h"
+#include "sortingmodel.h"
 
 #include <qtoolbar.h>
 #include <qboxlayout.h>
@@ -11,10 +11,16 @@
 #include <qtreeview.h>
 #include <qevent.h>
 
-ExplorerBase::ExplorerBase( QWidget* parent ) : QWidget( parent ), m_model( 0 )
+ExplorerBase::ExplorerBase( QWidget* parent ) : QWidget( parent ), m_sourceModel( 0 )
 {
 	m_treeView = new QTreeView( this );
 	m_treeView->setSelectionMode( QAbstractItemView::ExtendedSelection );
+	
+	m_sortingModel = new SortingModel( this );
+	m_treeView->setModel( m_sortingModel );
+	m_treeView->setSortingEnabled( true );
+	m_treeView->sortByColumn( 0, Qt::AscendingOrder );
+	m_sortingModel->setDynamicSortFilter( true );
 
 	DoublePropertyDelegate* doublePropertyDelegate = new DoublePropertyDelegate( m_treeView );
 	m_treeView->setItemDelegate( doublePropertyDelegate );
@@ -60,9 +66,9 @@ QTreeView* ExplorerBase::treeView() const
 	return m_treeView;
 }
 
-BaseModel* ExplorerBase::model() const
+BaseModel* ExplorerBase::sourceModel() const
 {
-	return m_model;
+	return m_sourceModel;
 }
 
 void ExplorerBase::onDataChanged( QwtPlotItem* plotItem )
@@ -70,7 +76,7 @@ void ExplorerBase::onDataChanged( QwtPlotItem* plotItem )
 	if( plotItem->rtti() == Globals::Rtti_PlotMarker ||
 		plotItem->rtti() == Globals::Rtti_PlotKnot )
 	{
-		m_model->emitDataChangedForItem( plotItem );
+		m_sourceModel->emitDataChangedForItem( plotItem );
 	}
 }
 
@@ -81,8 +87,14 @@ void ExplorerBase::onSelectionChanged( const QItemSelection& selected, const QIt
 	else
 		m_actionDelete->setEnabled( true );
 
-	QModelIndexList selectedIndexes = selected.indexes();
-	QModelIndexList deselectedIndexes = deselected.indexes();
+	QItemSelection sourceSelected;
+	QItemSelection sourceDeselected;
+
+	sourceSelected =  m_sortingModel->mapSelectionToSource( selected );
+	sourceDeselected = m_sortingModel->mapSelectionToSource( deselected );
+
+	QModelIndexList selectedIndexes = sourceSelected.indexes();
+	QModelIndexList deselectedIndexes = sourceDeselected.indexes();
 
 	QList<QwtPlotItem*> selectedItems;
 	QList<QwtPlotItem*> deselectedItems;
@@ -91,14 +103,14 @@ void ExplorerBase::onSelectionChanged( const QItemSelection& selected, const QIt
 	{
 		if( index.column() != 0 )
 			continue;
-		selectedItems.append( model()->itemFromIndexAs<QwtPlotItem>( index ) );
+		selectedItems.append( sourceModel()->itemFromIndexAs<QwtPlotItem>( index ) );
 	}
 
 	foreach( QModelIndex index, deselectedIndexes )
 	{
 		if( index.column() != 0 )
 			continue;
-		deselectedItems.append( model()->itemFromIndexAs<QwtPlotItem>( index ) );
+		deselectedItems.append( sourceModel()->itemFromIndexAs<QwtPlotItem>( index ) );
 	}
 
 	emit selectionChanged( selectedItems, deselectedItems );
@@ -109,10 +121,10 @@ void ExplorerBase::onSelectionChangedFromPlotWidget( QList<QwtPlotItem*>& select
 {
 	blockSignals( true );
 	foreach( QwtPlotItem* plotItem, selectedItems )
-		m_treeView->selectionModel()->select( m_model->indexOfItem( plotItem ), QItemSelectionModel::Select | QItemSelectionModel::Rows );
+		m_treeView->selectionModel()->select( m_sortingModel->indexOfItem( plotItem ), QItemSelectionModel::Select | QItemSelectionModel::Rows );
 
 	foreach( QwtPlotItem* plotItem, deselectedItems )
-		m_treeView->selectionModel()->select( m_model->indexOfItem( plotItem ), QItemSelectionModel::Deselect | QItemSelectionModel::Rows );
+		m_treeView->selectionModel()->select( m_sortingModel->indexOfItem( plotItem ), QItemSelectionModel::Deselect | QItemSelectionModel::Rows );
 	blockSignals( false );
 }
 
@@ -121,10 +133,11 @@ void ExplorerBase::deleteAllItems()
 	QItemSelection selection;
 	QModelIndex topLeftIndex;
 	QModelIndex bottomRightIndex;
-	topLeftIndex = model()->index( 0, 0 );
-	bottomRightIndex = model()->index( model()->rowCount() - 1, model()->columnCount() - 1 );
+	topLeftIndex = m_sourceModel->index( 0, 0 );
+	bottomRightIndex = m_sourceModel->index( m_sourceModel->rowCount() - 1, m_sourceModel->columnCount() - 1 );
 
 	selection.select( topLeftIndex, bottomRightIndex );
+	selection = m_sortingModel->mapSelectionFromSource( selection );
 	m_treeView->selectionModel()->select( selection, QItemSelectionModel::Select );
 	onDelete();
 }
@@ -132,6 +145,7 @@ void ExplorerBase::deleteAllItems()
 void ExplorerBase::onDelete()
 {
 	QItemSelection itemSelection = m_treeView->selectionModel()->selection();
+	itemSelection = m_sortingModel->mapSelectionToSource( itemSelection );
 	QModelIndexList selectedIndexes = itemSelection.indexes();
 	QList<QPersistentModelIndex> selectedPersistentIndexes;
 
@@ -145,7 +159,7 @@ void ExplorerBase::onDelete()
 
 	foreach( QPersistentModelIndex persistentIndex, selectedPersistentIndexes )
 	{
-		m_model->removeItemByIndex( persistentIndex );
+		m_sourceModel->removeItemByIndex( persistentIndex );
 	}
 	blockSignals( false );
 
