@@ -23,6 +23,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PolynomialAlgorithm", "Poly
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SplineAlgorithm", "SplineAlgorithm\SplineAlgorithm.vcxproj", "{43FC1729-FE14-487D-BBB0-01AEF6B1F675}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SplineGeneticAlgorithm", "SplineGeneticAlgorithm\SplineGeneticAlgorithm.vcxproj", "{8BC0B48C-7DCB-464D-9D4E-FCD56B863D5C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{31B1CEB8-7A4A-43DE-9AFF-FAAA1FBEEFF8} = {31B1CEB8-7A4A-43DE-9AFF-FAAA1FBEEFF8}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -57,6 +62,10 @@ Global
 		{43FC1729-FE14-487D-BBB0-01AEF6B1F675}.Debug|Win32.Build.0 = Debug|Win32
 		{43FC1729-FE14-487D-BBB0-01AEF6B1F675}.Release|Win32.ActiveCfg = Release|Win32
 		{43FC1729-FE14-487D-BBB0-01AEF6B1F675}.Release|Win32.Build.0 = Release|Win32
+		{8BC0B48C-7DCB-464D-9D4E-FCD56B863D5C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8BC0B48C-7DCB-464D-9D4E-FCD56B863D5C}.Debug|Win32.Build.0 = Debug|Win32
+		{8BC0B48C-7DCB-464D-9D4E-FCD56B863D5C}.Release|Win32.ActiveCfg = Release|Win32
+		{8BC0B48C-7DCB-464D-9D4E-FCD56B863D5C}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

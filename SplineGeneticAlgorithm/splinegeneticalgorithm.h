@@ -1,16 +1,16 @@
-#ifndef SPLINEALGORITHM_H
-#define SPLINEALGORITHM_H
+#ifndef SPLINEGA_H
+#define SPLINEGA_H
 
 #include "ialgorithm.h"
 #include "algorithmbase.h"
 
-class SplineAlgorithm : public AlgorithmBase
+class SplineGA : public AlgorithmBase
 {
 	Q_OBJECT
     Q_INTERFACES( IAlgorithm )
 public:
-	SplineAlgorithm();
-	virtual ~SplineAlgorithm();
+	SplineGA();
+	virtual ~SplineGA();
 
 	virtual void evaluate();
 	virtual QString name() const;
@@ -22,4 +22,4 @@ public:
 	double splineHelperFunction( double base, double argument, int power ) const;
 };
 
-#endif // SPLINEALGORITHM_H
+#endif // SPLINEGA_H
