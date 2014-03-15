@@ -5,6 +5,9 @@
 #include <qmath.h>
 #include <qtranslator.h>
 #include <qapplication.h>
+#include <qnumeric.h>
+
+#include <iostream>
 
 using namespace Eigen;
 
@@ -78,6 +81,8 @@ void SplineAlgorithm::evaluate()
 
 				lambda /= ( m_knots.at( i + column ) - m_knots.at( j + column ) );
 			}
+			if( !qIsFinite( lambda ) )
+				int breakpoint = 0;
 			lambdas.append( lambda );
 		}
 
@@ -95,6 +100,10 @@ void SplineAlgorithm::evaluate()
 					splineHelperFunction( m_knots.at( j + column ), m_markers.at( row ).x(), splineDegree );
 			}
 
+			if( qAbs( sum ) < 1.0e-06 || qIsNaN( sum ) )
+				sum = 0;
+			//if( qIsNaN( sum ) )
+			//	sum = 0;
 			matrixA( row, column ) = sum;
 		}
 	}
@@ -115,6 +124,11 @@ void SplineAlgorithm::evaluate()
 
 	matrixAPlus = svd.matrixV() * matrixSPlus * svd.matrixU().transpose();
 	result = matrixAPlus * vectorB;
+
+	std::cout << std::endl << "Result vector\n" << result << std::endl;
+	std::cout << std::endl << "Matrix A\n" << matrixA << std::endl;
+	//std::cout << std::endl << "Matrix A Reconstructed\n" << svd.matrixU() * matrixS *  svd.matrixV().transpose() << std::endl;
+	std::cout << std::endl << "Matrix A+\n" << matrixAPlus << std::endl;
 
 	int i = 0;
 	double x = m_markers.first().x();

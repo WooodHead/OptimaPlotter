@@ -50,8 +50,8 @@ PlotWidget::PlotWidget( QWidget* parent ): QwtPlot( parent )
     m_plotGrid->setMajorPen( Qt::black, 1, Qt::DotLine );
     m_plotGrid->attach( this );
 
-	setAxisScale( yLeft, -20, 20 );
-	setAxisScale( xBottom, -20, 20 );
+	setAxisScale( yLeft, -50, 50 );
+	setAxisScale( xBottom, -50, 50 );
 
 	connect( m_plotPicker, SIGNAL( selected( const QPointF& ) ),
 		this, SIGNAL( pointPicked( const QPointF& ) ) );

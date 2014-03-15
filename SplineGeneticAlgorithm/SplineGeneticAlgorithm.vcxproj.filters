@@ -58,10 +58,40 @@
     <ClCompile Include="GeneratedFiles\qrc_splinegeneticalgorithm.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="splinepopulation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="splinedna.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="splineinterval.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="splineknot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gasettings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
       <Filter>STDAFX</Filter>
+    </ClInclude>
+    <ClInclude Include="splinepopulation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="splinedna.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="splineinterval.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="splineknot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gasettings.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -83,6 +83,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="gasettings.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_splinegeneticalgorithm.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -95,7 +96,11 @@
     <ClCompile Include="GeneratedFiles\Release\moc_splinegeneticalgorithm.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="splinedna.cpp" />
     <ClCompile Include="splinegeneticalgorithm.cpp" />
+    <ClCompile Include="splineinterval.cpp" />
+    <ClCompile Include="splineknot.cpp" />
+    <ClCompile Include="splinepopulation.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -112,6 +117,11 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp" "-fStdAfx.h" "-f../../splinegeneticalgorithm.h"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DSPLINEGENETICALGORITHM_LIB -D_WINDLL "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I.\..\Eigen" "-I.\..\Globals" "-I.\..\Interfaces"</Command>
     </CustomBuild>
+    <ClInclude Include="gasettings.h" />
+    <ClInclude Include="splinedna.h" />
+    <ClInclude Include="splineinterval.h" />
+    <ClInclude Include="splineknot.h" />
+    <ClInclude Include="splinepopulation.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
