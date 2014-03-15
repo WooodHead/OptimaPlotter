@@ -10,7 +10,7 @@
 class SplineDNA
 {
 public:
-	SplineDNA( const QVector<QPointF>* markers );
+	SplineDNA( const QVector<QPointF>* markers = 0 );
 	SplineDNA( const SplineDNA& other );
 	~SplineDNA();
 

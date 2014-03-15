@@ -9,6 +9,7 @@
 #include <qnumeric.h>
 #include <qtranslator.h>
 #include <qapplication.h>
+#include <qtconcurrentmap.h>
 
 #include <iostream>
 
@@ -34,6 +35,8 @@ bool markersEqual( const QPointF& p1, const QPointF& p2 )
 		return true;
 	return false;
 }
+
+SplineDNA crossoverAndMutate( const QPair<SplineDNA, SplineDNA>& pairOfDNAs );
 
 SplineGA::SplineGA() : m_currentPopulation( m_markers )
 {
@@ -331,16 +334,28 @@ void SplineGA::executeGA()
 	while( generationNumber < numberOfGenerations )
 	{
 		SplinePopulation nextGenPopulation( m_markers );
+		QList<QPair<SplineDNA, SplineDNA> > listOfPairDNAsToCrossoverAndMutate;
+
 		for( int i = 0; i < countOfIntervalsToCrossover, i < populationSize; ++i )
 		{
 			const SplineDNA& splineDNA1 = listOfIndividuals.at( i );
 			for( int j = i + 1; j < countOfIntervalsToCrossover, j < populationSize; ++j )
 			{
 				const SplineDNA& splineDNA2 = listOfIndividuals.at( j );
-				SplineDNA resultSpline = crossOver( splineDNA1, splineDNA2 );
-				resultSpline.mutate();
-				nextGenPopulation.addIndividualToPopulation( resultSpline );
+				listOfPairDNAsToCrossoverAndMutate.append( QPair<SplineDNA, SplineDNA>( splineDNA1, splineDNA2 ) );
+				//SplineDNA resultSpline = crossOver( splineDNA1, splineDNA2 );
+				//resultSpline.mutate();
+				//nextGenPopulation.addIndividualToPopulation( resultSpline );
 			}
+		}
+
+		QFuture<SplineDNA> future = QtConcurrent::mapped( listOfPairDNAsToCrossoverAndMutate, crossoverAndMutate );
+		while( future.isRunning() ) ;
+		QFuture<SplineDNA>::const_iterator iterator = future.constBegin();
+		for( ; iterator != future.constEnd(); ++iterator )
+		{
+			SplineDNA dna = *iterator;
+			nextGenPopulation.addIndividualToPopulation( dna );
 		}
 
 		nextGenPopulation.sortIndividualsOnFitness();
@@ -366,6 +381,13 @@ void SplineGA::executeGA()
 	std::cout << "BEST DNA fitness: " << std::endl;
 	bestDNA.dumpFitness();
 
+}
+
+SplineDNA crossoverAndMutate( const QPair<SplineDNA, SplineDNA>& pairOfDNAs )
+{
+	SplineDNA resultSpline = crossOver( pairOfDNAs.first, pairOfDNAs.second );
+	resultSpline.mutate();
+	return resultSpline;
 }
 
 Q_EXPORT_PLUGIN2( splinegeneticalgorithm, SplineGA );
