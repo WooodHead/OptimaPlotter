@@ -5,7 +5,7 @@ GASettings* GASettings::s_instance = 0;
 
 GASettings::GASettings()
 {
-	m_populationSize = 10;
+	m_populationSize = 12;
 	m_numberOfGenerations = 50;
 }
 
@@ -54,7 +54,7 @@ int GASettings::numberOfIntervals() const
 	
 int GASettings::numberOfKnots() const
 {
-	return 4 * m_numberOfntervals - 2; //TODO: change for each degree of spline
+	return ( m_numberOfntervals - 1 ) * ( m_splineDegree + 1 ) + 2; 
 }
 
 void GASettings::setSplineDegree( int splineDegree )

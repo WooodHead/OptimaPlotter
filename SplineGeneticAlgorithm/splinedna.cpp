@@ -390,7 +390,10 @@ SplineDNA crossOver( const SplineDNA& dna1, const SplineDNA& dna2 )
 
 	splineDNA.buildIntervals();
 	const QList<SplineInterval>& currentIntervalsInSpline = splineDNA.listOfIntervals();
-	const int numberOfKnotsToAddPerInterval = 2; //TODO: get it from GA Settings
+	const int numberOfKnotsToAddPerInterval = GASettings::instance()->splineDegree() - 1;
+
+	if( numberOfKnotsToAddPerInterval == 0 )
+		return splineDNA;
 
 	QList<SplineKnot> allKnots = dna1.listOfKnots();
 	allKnots.append( dna2.listOfKnots() );
