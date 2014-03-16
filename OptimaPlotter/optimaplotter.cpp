@@ -304,7 +304,7 @@ void OptimaPlotter::onExecuteSettingsDialog()
 void OptimaPlotter::readSettings()
 {
 	QSettings settings( "BardiSolutions", "OptimaPlotter" );
-	int language = settings.value( "language", Globals::LANG_HY ).toInt();
+	int language = settings.value( "language", Globals::LANG_EN ).toInt();
 
 	foreach( IAlgorithm* algorithm, m_availableAlgorithms )
 	{
