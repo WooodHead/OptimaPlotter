@@ -19,8 +19,8 @@ int SplinePopulation::numberOfIndividuals() const
 	
 void SplinePopulation::addIndividualToPopulation( SplineDNA& individual )
 {
-	individual.computeFitness();
-	individual.buildIntervals();
+	//individual.computeFitness();
+	//individual.buildIntervals();
 	m_listOfIndividuals.append( individual );
 }
 

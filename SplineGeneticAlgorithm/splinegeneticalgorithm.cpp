@@ -289,6 +289,8 @@ void SplineGA::createFirstPopulation()
 			splineDNA.addKnot( knotCoordinate );
 		}
 
+		splineDNA.computeFitness();
+		splineDNA.buildIntervals();
 		m_currentPopulation.addIndividualToPopulation( splineDNA );
 	}
 
@@ -343,9 +345,6 @@ void SplineGA::executeGA()
 			{
 				const SplineDNA& splineDNA2 = listOfIndividuals.at( j );
 				listOfPairDNAsToCrossoverAndMutate.append( QPair<SplineDNA, SplineDNA>( splineDNA1, splineDNA2 ) );
-				//SplineDNA resultSpline = crossOver( splineDNA1, splineDNA2 );
-				//resultSpline.mutate();
-				//nextGenPopulation.addIndividualToPopulation( resultSpline );
 			}
 		}
 
@@ -387,6 +386,8 @@ SplineDNA crossoverAndMutate( const QPair<SplineDNA, SplineDNA>& pairOfDNAs )
 {
 	SplineDNA resultSpline = crossOver( pairOfDNAs.first, pairOfDNAs.second );
 	resultSpline.mutate();
+	resultSpline.computeFitness();
+	resultSpline.buildIntervals();
 	return resultSpline;
 }
 
