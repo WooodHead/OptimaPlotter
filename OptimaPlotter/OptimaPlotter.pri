@@ -21,7 +21,8 @@ HEADERS += ./GeneratedFiles/ui_optimaplotter.h \
     ./doublepropertydelegate.h \
     ./rangeexplorer.h \
     ./rangemodel.h \
-    ./sortingmodel.h
+    ./sortingmodel.h \
+    ./algosettingstoolwidget.h
 SOURCES += ./knotitem.cpp \
     ./knotpicker.cpp \
     ./main.cpp \
@@ -44,7 +45,8 @@ SOURCES += ./knotitem.cpp \
     ./doublepropertydelegate.cpp \
     ./rangeexplorer.cpp \
     ./rangemodel.cpp \
-    ./sortingmodel.cpp
+    ./sortingmodel.cpp \
+    ./algosettingstoolwidget.cpp
 FORMS += ./optimaplotter.ui \
     ./settingsdialog.ui
 TRANSLATIONS += ./optimaplotter_hy.ts

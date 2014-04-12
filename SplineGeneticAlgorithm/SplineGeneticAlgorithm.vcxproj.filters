@@ -93,6 +93,9 @@
     <ClInclude Include="gasettings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_splinegasettingsform.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="splinegeneticalgorithm.h">
@@ -100,6 +103,9 @@
     </CustomBuild>
     <CustomBuild Include="splinegeneticalgorithm.qrc">
       <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="splinegasettingsform.ui">
+      <Filter>Form Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

@@ -61,6 +61,9 @@
     <ClInclude Include="stdafx.h">
       <Filter>STDAFX</Filter>
     </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_splinesettingsform.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="splinealgorithm.h">
@@ -68,6 +71,9 @@
     </CustomBuild>
     <CustomBuild Include="splinealgorithm.qrc">
       <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="splinesettingsform.ui">
+      <Filter>Form Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

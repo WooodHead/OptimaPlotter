@@ -223,6 +223,15 @@
     <ClCompile Include="sortingmodel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="algosettingstoolwidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_algosettingstoolwidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_algosettingstoolwidget.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_optimaplotter.h">
@@ -306,6 +315,9 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="rangemodel.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="algosettingstoolwidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

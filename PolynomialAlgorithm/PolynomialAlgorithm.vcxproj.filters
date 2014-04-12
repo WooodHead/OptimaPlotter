@@ -66,10 +66,16 @@
     <CustomBuild Include="polynomialalgorithm.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="polynomialsettingsform.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
       <Filter>STDAFX</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_polynomialsettingsform.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

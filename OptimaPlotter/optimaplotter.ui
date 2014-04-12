@@ -39,6 +39,7 @@
     <addaction name="actionPick"/>
     <addaction name="actionPan"/>
     <addaction name="separator"/>
+    <addaction name="actionAlgorithmPreferences"/>
     <addaction name="actionExecute"/>
    </widget>
    <widget class="QMenu" name="menuOptions">
@@ -66,6 +67,7 @@
    <addaction name="actionPick"/>
    <addaction name="actionPan"/>
    <addaction name="separator"/>
+   <addaction name="actionAlgorithmPreferences"/>
    <addaction name="actionExecute"/>
    <addaction name="separator"/>
   </widget>
@@ -124,6 +126,17 @@
   <action name="actionSettings">
    <property name="text">
     <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionAlgorithmPreferences">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Algorithm Preferences</string>
    </property>
   </action>
  </widget>

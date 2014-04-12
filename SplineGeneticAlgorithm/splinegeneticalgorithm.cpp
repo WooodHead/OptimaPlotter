@@ -40,7 +40,8 @@ SplineDNA crossoverAndMutate( const QPair<SplineDNA, SplineDNA>& pairOfDNAs );
 
 SplineGA::SplineGA() : m_currentPopulation( m_markers )
 {
-
+	m_settingsWidget = new QWidget();
+	m_settingsWidgetForm.setupUi( m_settingsWidget );
 }
 
 SplineGA::~SplineGA()
@@ -61,14 +62,9 @@ void SplineGA::evaluate()
 		return;
 	const int samplesCount = value.toInt();
 
-	getPropertyValueByTagName( "polynomial_degree", value, ok );
-	if( !ok )
-		return;
-	const int splineDegree = value.toInt();
-
+	applySettings();
 	GASettings* gaSettings = GASettings::instance();
-	gaSettings->setSplineDegree( splineDegree );
-	gaSettings->setNumberOfIntervals( 4 ); //TODO: dynamically change
+	const int splineDegree = gaSettings->splineDegree();
 
 	QPointF minPointOnY = *std::min_element( m_markers.begin(), m_markers.end(), lessThanForTwoPointsOnYAxis );
 	QPointF maxPointOnY = *std::max_element( m_markers.begin(), m_markers.end(), lessThanForTwoPointsOnYAxis );
@@ -380,6 +376,23 @@ void SplineGA::executeGA()
 	std::cout << "BEST DNA fitness: " << std::endl;
 	bestDNA.dumpFitness();
 
+}
+
+
+void SplineGA::applySettings()
+{
+	GASettings* gaSettings = GASettings::instance();
+	gaSettings->setNumberOfGenerations( 
+		m_settingsWidgetForm.numberOfGenerationsSpinBox->value() );
+	gaSettings->setNumberOfIntervals( m_settingsWidgetForm.numberOfIntervalsSpinBox->value() );
+	gaSettings->setPopulationSize( m_settingsWidgetForm.populationSizeSpinBox->value() );
+	gaSettings->setSplineDegree( m_settingsWidgetForm.splineDegreeSpinBox->value() );
+}
+
+void SplineGA::retranslateUi()
+{
+	if( m_settingsWidget )
+		m_settingsWidgetForm.retranslateUi( m_settingsWidget );
 }
 
 SplineDNA crossoverAndMutate( const QPair<SplineDNA, SplineDNA>& pairOfDNAs )

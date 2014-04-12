@@ -4,9 +4,22 @@
 <context>
     <name>PolynomialAlgorithm</name>
     <message>
-        <location filename="polynomialalgorithm.cpp" line="117"/>
+        <location filename="polynomialalgorithm.cpp" line="123"/>
         <source>Polynomial</source>
         <translation>Բազմանդամային</translation>
+    </message>
+</context>
+<context>
+    <name>SettingsWidgetForm</name>
+    <message>
+        <location filename="polynomialsettingsform.ui" line="14"/>
+        <source>Algorithm Settings</source>
+        <translation>Ալգորիթմի կարգավորումները</translation>
+    </message>
+    <message>
+        <location filename="polynomialsettingsform.ui" line="22"/>
+        <source>Polynomial Degree:</source>
+        <translation>Բազմանդամի աստիճանը.</translation>
     </message>
 </context>
 <context>

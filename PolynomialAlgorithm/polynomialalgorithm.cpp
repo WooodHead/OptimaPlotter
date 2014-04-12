@@ -15,7 +15,8 @@ bool lessThanForTwoPointsOnXAxis( const QPointF& p1, const QPointF& p2 )
 
 PolynomialAlgorithm::PolynomialAlgorithm()
 {
-
+	m_settingsWidget = new QWidget();
+	m_settingsWidgetForm.setupUi( m_settingsWidget );
 }
 
 PolynomialAlgorithm::~PolynomialAlgorithm()
@@ -34,6 +35,8 @@ void PolynomialAlgorithm::evaluate()
 	if( !ok )
 		return;
 	const int samplesCount = value.toInt();
+
+	applySettings();
 
 	getPropertyValueByTagName( "polynomial_degree", value, ok );
 	if( !ok )
@@ -138,11 +141,22 @@ QString PolynomialAlgorithm::translatorPath( int language ) const
 	}
 }
 
+void PolynomialAlgorithm::retranslateUi()
+{
+	if( m_settingsWidget )
+		m_settingsWidgetForm.retranslateUi( m_settingsWidget );
+}
+
 Globals::AlgorithmFlags PolynomialAlgorithm::flags() const
 {
 	Globals::AlgorithmFlags flags = AlgorithmBase::flags();
 	return flags;
 	//return flags /*| Globals::ALGO_FLAG_KNOT_PICKER*/  | Globals::ALGO_FLAG_RANGE_PICKER;
+}
+
+void PolynomialAlgorithm::applySettings()
+{
+	setPropertyValueByTagName( "polynomial_degree", m_settingsWidgetForm.polynomialDegreeSpinBox->value() );
 }
 
 Q_EXPORT_PLUGIN2( polynomialalgorithm, PolynomialAlgorithm );

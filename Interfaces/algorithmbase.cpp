@@ -5,7 +5,7 @@
 #include <qtranslator.h>
 #include <qapplication.h>
 
-AlgorithmBase::AlgorithmBase( QObject* parent ) : QObject( parent ), IAlgorithm()
+AlgorithmBase::AlgorithmBase( QObject* parent ) : QObject( parent ), IAlgorithm(), m_settingsWidget( 0 )
 {
 	m_translator = new QTranslator( this );
 }
@@ -76,8 +76,17 @@ void AlgorithmBase::applyLanguage( int language )
 	}
 }
 
+void AlgorithmBase::retranslateUi()
+{
+	//Nothing to do in base class...
+}
+
 Globals::AlgorithmFlags AlgorithmBase::flags() const
 {
 	return Globals::ALGO_FLAG_POINT_PICKER;
 }
 
+QWidget* AlgorithmBase::settingsWidget() const
+{
+	return m_settingsWidget;
+}

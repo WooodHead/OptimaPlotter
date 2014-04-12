@@ -18,7 +18,8 @@ bool lessThanForTwoPointsOnXAxis( const QPointF& p1, const QPointF& p2 )
 
 SplineAlgorithm::SplineAlgorithm()
 {
-
+	m_settingsWidget = new QWidget();
+	m_settingsWidgetForm.setupUi( m_settingsWidget );
 }
 
 SplineAlgorithm::~SplineAlgorithm()
@@ -38,7 +39,9 @@ void SplineAlgorithm::evaluate()
 		return;
 	const int samplesCount = value.toInt();
 
-	getPropertyValueByTagName( "polynomial_degree", value, ok );
+	applySettings();
+
+	getPropertyValueByTagName( "spline_degree", value, ok );
 	if( !ok )
 		return;
 	const int splineDegree = value.toInt();
@@ -189,6 +192,12 @@ QString SplineAlgorithm::translatorPath( int language ) const
 	}
 }
 
+void SplineAlgorithm::retranslateUi()
+{
+	if( m_settingsWidget )
+		m_settingsWidgetForm.retranslateUi( m_settingsWidget );
+}
+
 double SplineAlgorithm::splineHelperFunction( double base, double argument, int power ) const
 {
 	double valueToRaiseToPower = ( base - argument ) > 0 ? ( base - argument ) : 0;
@@ -199,6 +208,11 @@ Globals::AlgorithmFlags SplineAlgorithm::flags() const
 {
 	Globals::AlgorithmFlags flags = AlgorithmBase::flags();
 	return flags | Globals::ALGO_FLAG_KNOT_PICKER;//  | Globals::ALGO_FLAG_RANGE_PICKER;
+}
+
+void SplineAlgorithm::applySettings()
+{
+	setPropertyValueByTagName( "spline_degree", m_settingsWidgetForm.splineDegreeSpinBox->value() );
 }
 
 Q_EXPORT_PLUGIN2( splinealgorithm, SplineAlgorithm );

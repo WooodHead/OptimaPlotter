@@ -9,6 +9,7 @@
 #include <qvariant.h>
 
 class QTranslator;
+class QWidget;
 
 typedef QMap<QString, QVariant> PROPERTYMAP;
 
@@ -34,6 +35,9 @@ public:
 
 	virtual QString translatorPath( int language ) const = 0;
 	virtual void applyLanguage( int language );
+	virtual void retranslateUi();
+
+	virtual QWidget* settingsWidget() const;
 
 protected:
 	PROPERTYMAP m_propertyMap;
@@ -41,6 +45,7 @@ protected:
 	QVector<double> m_knots;
 	QVector<QPointF> m_samples;
 	QTranslator* m_translator;
+	QWidget* m_settingsWidget;
 	double m_rangeLeftBorder;
 	double m_rangeRightBorder;
 };

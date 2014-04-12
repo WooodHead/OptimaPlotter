@@ -9,6 +9,8 @@
 
 #include <QtPlugin>
 
+class QWidget;
+
 class IAlgorithm
 {
 public:
@@ -26,10 +28,15 @@ public:
 	virtual QString tagName() const = 0;
 	virtual Globals::AlgorithmFlags flags() const = 0;
 
+	virtual void retranslateUi() = 0;
+
 	virtual void applyLanguage( int language ) = 0;
 
 	virtual void setPropertyValueByTagName( const QString& tagName, const QVariant& value ) = 0;
 	virtual void getPropertyValueByTagName( const QString& tagName, QVariant& value, bool& ok ) const = 0;
+
+	virtual QWidget* settingsWidget() const = 0;
+	virtual void applySettings() = 0;
 };
 
 Q_DECLARE_INTERFACE( IAlgorithm, "com.OptimaPlotter.AlgorithmInterface/1.0" );

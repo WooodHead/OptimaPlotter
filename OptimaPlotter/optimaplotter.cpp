@@ -9,6 +9,7 @@
 #include "markerexplorer.h"
 #include "knotexplorer.h"
 #include "rangeexplorer.h"
+#include "algosettingstoolwidget.h"
 
 #include <qdebug.h>
 #include <qpen.h>
@@ -25,7 +26,7 @@
 #include <qpluginloader.h>
 
 OptimaPlotter::OptimaPlotter( QWidget *parent, Qt::WFlags flags )
-	: QMainWindow( parent, flags ), m_currentAlgorithm( 0 )
+	: QMainWindow( parent, flags ), m_currentAlgorithm( 0 ), m_algoSettingsToolWidget( 0 )
 {
 	m_markerExplorer = 0;
 	m_knotExplorer = 0;
@@ -55,6 +56,9 @@ OptimaPlotter::OptimaPlotter( QWidget *parent, Qt::WFlags flags )
 
 	connect( m_plotWidget, SIGNAL( pointPicked( const QPointF& ) ), this, SLOT( onPointAdded( const QPointF& ) ) );
 	connect( m_plotWidget, SIGNAL( knotPicked( double ) ), this, SLOT( onKnotAdded( double ) ) );
+
+	connect( m_algoSettingsToolWidget, SIGNAL( closedByUser() ), this, SLOT( onAlgorithmSettingsToolWidgetClosed() ) );
+	connect( ui.actionAlgorithmPreferences, SIGNAL( toggled( bool ) ), this, SLOT( onShowAlgorithmSettingsToolWidget() ) );
 	
 
 	// Connections between the explorers and the plot widget.
@@ -154,7 +158,6 @@ void OptimaPlotter::onExecute()
 	if( m_currentAlgorithm->flags() & Globals::ALGO_FLAG_RANGE_PICKER )
 		m_knotExplorer->deleteAllItems();
 
-	m_currentAlgorithm->setPropertyValueByTagName( "polynomial_degree", m_polynomialDegreeSpinBox->value() );
 	m_currentAlgorithm->setPropertyValueByTagName( "samples_count", 100000 );
 
 	QVector<QPointF> samples;
@@ -257,19 +260,6 @@ void OptimaPlotter::setupToolBar()
 
 	ui.mainToolBar->addSeparator();
 
-	m_polynomialDegreeLabel = new QLabel( tr( "Degree:" ) );
-	m_polynomialDegreeLabel->setMargin( 3 );
-	ui.mainToolBar->addWidget( m_polynomialDegreeLabel );
-
-	m_polynomialDegreeSpinBox = new QSpinBox;
-	ui.mainToolBar->addWidget( m_polynomialDegreeSpinBox );
-	m_polynomialDegreeSpinBox->setMinimum( 1 );
-	m_polynomialDegreeSpinBox->setMaximum( 4 );
-	m_polynomialDegreeSpinBox->setValue( 3 );
-	m_polynomialDegreeSpinBox->setToolTip( tr( "Degree" ) );
-
-	m_polynomialDegreeLabel->setBuddy( m_polynomialDegreeSpinBox );
-
 	connect( m_algorithmSelectorComboBox, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onAlgorithmSelectorIndexChanged( int ) ) );
 }
 
@@ -299,6 +289,29 @@ void OptimaPlotter::onExecuteSettingsDialog()
 			readSettings();
 		}
 	}
+}
+
+void OptimaPlotter::onShowAlgorithmSettingsToolWidget()
+{
+	QAction* action = qobject_cast<QAction*>( sender() );
+	if( action )
+	{
+		if( action->isChecked() )
+		{
+			if( m_algoSettingsToolWidget->isHidden() )
+				m_algoSettingsToolWidget->show();
+		}
+		else
+		{
+			if( !m_algoSettingsToolWidget->isHidden() )
+				m_algoSettingsToolWidget->hide();
+		}
+	}
+}
+
+void OptimaPlotter::onAlgorithmSettingsToolWidgetClosed()
+{
+	ui.actionAlgorithmPreferences->setChecked( false );
 }
 
 void OptimaPlotter::readSettings()
@@ -334,16 +347,20 @@ void OptimaPlotter::readSettings()
 void OptimaPlotter::retranslateUi()
 {
 	ui.retranslateUi( this );
-	m_polynomialDegreeSpinBox->setToolTip( tr( "Degree" ) );
-	m_polynomialDegreeLabel->setText( tr( "Degree:" ) );
 	
 	const int algorithmSelectorCurrentIndex = m_algorithmSelectorComboBox->currentIndex();
-	m_algorithmSelectorComboBox->clear();
+	//m_algorithmSelectorComboBox->clear();
 	
+	int index = 0;
 	foreach( IAlgorithm* algorithm, m_availableAlgorithms )
 	{
-		 m_algorithmSelectorComboBox->addItem( algorithm->name(), algorithm->tagName() );
+		algorithm->retranslateUi();
+		m_algorithmSelectorComboBox->setItemText( index, algorithm->name() );
+		++index;
+		//m_algorithmSelectorComboBox->addItem( algorithm->name(), algorithm->tagName() );
 	}
+
+	//m_algorithmSelectorComboBox->setCurrentIndex( algorithmSelectorCurrentIndex );
 
 	ui.knotDockWidget->setWindowTitle( m_knotExplorer->name() );
 	ui.markerDockWidget->setWindowTitle( m_markerExplorer->name() );
@@ -360,20 +377,22 @@ void OptimaPlotter::changeEvent( QEvent* event )
 
 void OptimaPlotter::onLoadPlugins()
 {
-	 QDir pluginsDir( qApp->applicationDirPath() );
+	m_algoSettingsToolWidget = new AlgoSettingsToolWidget( this );
 
-	 foreach ( QString fileName, pluginsDir.entryList( QDir::Files ) )
-	 {
-         QPluginLoader pluginLoader( pluginsDir.absoluteFilePath( fileName ) );
-         QObject* plugin = pluginLoader.instance();
-         if( plugin )
-		 {
-			 IAlgorithm* algorithm = qobject_cast<IAlgorithm*>( plugin );
-             m_currentAlgorithm = algorithm;
-			 m_availableAlgorithms.append( algorithm );
-			 m_algorithmSelectorComboBox->addItem( algorithm->name(), algorithm->tagName() );
-		 }
-     }
+	QDir pluginsDir( qApp->applicationDirPath() );
+
+	foreach ( QString fileName, pluginsDir.entryList( QDir::Files ) )
+	{
+		QPluginLoader pluginLoader( pluginsDir.absoluteFilePath( fileName ) );
+		QObject* plugin = pluginLoader.instance();
+		if( plugin )
+		{
+			IAlgorithm* algorithm = qobject_cast<IAlgorithm*>( plugin );
+			m_currentAlgorithm = algorithm;
+			m_availableAlgorithms.append( algorithm );
+			m_algorithmSelectorComboBox->addItem( algorithm->name(), algorithm->tagName() );
+		}
+	}
 }
 
 void OptimaPlotter::onAlgorithmSelectorIndexChanged( int index )
@@ -424,6 +443,32 @@ void OptimaPlotter::onAlgorithmSelectorIndexChanged( int index )
 				{
 					m_plotWidget->setKnotsEnabled( false );
 					ui.knotDockWidget->setVisible( false );
+				}
+
+				if( m_algoSettingsToolWidget )
+				{
+					if( m_currentAlgorithm->settingsWidget() == 0 )
+					{
+						m_algoSettingsToolWidget->hide();
+						ui.actionAlgorithmPreferences->setEnabled( false );
+					}
+					else
+					{
+						ui.actionAlgorithmPreferences->setEnabled( true );
+
+						m_algoSettingsToolWidget->setCentralWidget( m_currentAlgorithm->settingsWidget() );
+						m_algoSettingsToolWidget->updateGeometry();
+
+						bool show = ui.actionAlgorithmPreferences->isChecked();
+					
+						show ? 
+							m_algoSettingsToolWidget->show() : 
+							m_algoSettingsToolWidget->hide();
+							
+						QApplication::processEvents();
+						m_algoSettingsToolWidget->move( this->x() + this->width() - m_algoSettingsToolWidget->width()
+							, this->geometry().y() );
+					}
 				}
 
 				break;

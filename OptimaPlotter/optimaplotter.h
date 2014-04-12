@@ -13,6 +13,8 @@ class QComboBox;
 class MarkerExplorer;
 class KnotExplorer;
 class RangeExplorer;
+class AlgoSettingsToolWidget;
+
 class OptimaPlotter : public QMainWindow
 {
 	Q_OBJECT
@@ -43,6 +45,8 @@ private slots:
 	void onPointAdded( const QPointF& point );
 	void onKnotAdded( double coordinate );
 	void onExecute();
+	void onAlgorithmSettingsToolWidgetClosed();
+	void onShowAlgorithmSettingsToolWidget();
 	void onExecuteSettingsDialog();
 	void onLoadPlugins();
 	void onAlgorithmSelectorIndexChanged( int index );
@@ -50,16 +54,17 @@ private slots:
 private:
 	Ui::OptimaPlotterClass ui;
 	PlotWidget* m_plotWidget;
-	QLabel* m_polynomialDegreeLabel;
-	QSpinBox* m_polynomialDegreeSpinBox;
 	QComboBox* m_algorithmSelectorComboBox;
 	QTranslator* m_translator;
 	IAlgorithm* m_currentAlgorithm;
 	QList<IAlgorithm*> m_availableAlgorithms;
+
 	
 	MarkerExplorer* m_markerExplorer;
 	KnotExplorer* m_knotExplorer;
 	RangeExplorer* m_rangeExplorer;
+
+	AlgoSettingsToolWidget* m_algoSettingsToolWidget;
 };
 
 #endif //OPTIMAPLOTTER_H

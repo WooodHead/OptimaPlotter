@@ -14,3 +14,4 @@ SOURCES += ./splinegeneticalgorithm.cpp \
     ./splineknot.cpp
 TRANSLATIONS += ./splinegeneticalgorithm_hy.ts
 RESOURCES += splinegeneticalgorithm.qrc
+FORMS += ./splinegasettingsform.ui

@@ -5,6 +5,8 @@
 #include "algorithmbase.h"
 
 #include "splinepopulation.h"
+#include "ui_splinegasettingsform.h"
+
 
 class SplineGA : public AlgorithmBase
 {
@@ -19,8 +21,10 @@ public:
 	virtual QString name() const;
 	virtual QString tagName() const;
 	virtual Globals::AlgorithmFlags flags() const;
+	virtual void applySettings();
 
 	virtual QString translatorPath( int language ) const;
+	virtual void retranslateUi();
 
 	static double splineHelperFunction( double base, double argument, int power );
 
@@ -29,6 +33,7 @@ private:
 	void executeGA();
 
 private:
+	Ui::SettingsWidgetForm m_settingsWidgetForm;
 	SplinePopulation m_currentPopulation;
 };
 

@@ -35,16 +35,12 @@
 <context>
     <name>OptimaPlotter</name>
     <message>
-        <location filename="optimaplotter.cpp" line="260"/>
-        <location filename="optimaplotter.cpp" line="338"/>
         <source>Degree:</source>
-        <translation>Աստիճանը.</translation>
+        <translation type="obsolete">Աստիճանը.</translation>
     </message>
     <message>
-        <location filename="optimaplotter.cpp" line="269"/>
-        <location filename="optimaplotter.cpp" line="337"/>
         <source>Degree</source>
-        <translation>Աստիճանը</translation>
+        <translation type="obsolete">Աստիճանը</translation>
     </message>
     <message>
         <source>Polynomial Degree</source>
@@ -72,36 +68,41 @@
         <translation>Գործիքներ</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="46"/>
+        <location filename="optimaplotter.ui" line="47"/>
         <source>Options</source>
         <translation>Ընտրանքներ</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="99"/>
+        <location filename="optimaplotter.ui" line="101"/>
         <source>Pick a point</source>
         <translation>Կետերի նշում</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="113"/>
+        <location filename="optimaplotter.ui" line="115"/>
         <source>Pan and Zoom</source>
         <translation>Տեղաշարժել/ Մեծացնել</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="116"/>
+        <location filename="optimaplotter.ui" line="118"/>
         <source>Pan and zoom the plot</source>
         <translation>Տեղաշարժել/ մեծացնել պատկերը</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="121"/>
+        <location filename="optimaplotter.ui" line="123"/>
         <source>Execute</source>
         <translation>Կատարել</translation>
+    </message>
+    <message>
+        <location filename="optimaplotter.ui" line="139"/>
+        <source>Algorithm Preferences</source>
+        <translation>Ալգորիթմի նախապատվությունները</translation>
     </message>
     <message>
         <source>Reset</source>
         <translation type="obsolete">Մաքրել</translation>
     </message>
     <message>
-        <location filename="optimaplotter.ui" line="126"/>
+        <location filename="optimaplotter.ui" line="128"/>
         <source>Settings</source>
         <translation>Կարգավորումներ</translation>
     </message>
